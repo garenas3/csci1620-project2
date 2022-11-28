@@ -21,7 +21,7 @@ class MainController:
     def submit_zip_code(self) -> None:
         """Submit the zip code displayed in the zip code line edit."""
         zip_code = self.main_window.zip_code_edit.text()
-        submit_zip_code(zip_code)
+        self.main_window.zip_code_list.addItems([zip_code])
 
 
 def submit_zip_code(zip_code: str) -> None:
