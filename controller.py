@@ -7,6 +7,7 @@ class MainController:
         self.set_up_signals_and_slots()
 
     def show(self):
+        """Show the main window to the user."""
         self.main_window.show()
 
     def set_up_signals_and_slots(self):
