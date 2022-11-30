@@ -12,8 +12,10 @@ def load(filename: str = "programdata.csv") -> dict[str, str]:
                 zipcode = row[0]
                 latitude = row[1]
                 longitude = row[2]
+                city = row[3]
                 result[zipcode] = {"latitude": latitude,
-                                   "longitude": longitude}
+                                   "longitude": longitude,
+                                   "city": city}
             return result
     except FileNotFoundError:
         return {}
@@ -27,10 +29,10 @@ def save(data: dict[str, str],
     try:
         with open(filename, 'w', newline='') as fh:
             writer = csv.writer(fh)
-            writer.writerow(["zipcode", "latitude", "longitude"])
+            writer.writerow(["zipcode", "latitude", "longitude", "city"])
             for zipcode, coords in data.items():
                 writer.writerow(
-                    [zipcode, coords["latitude"], coords["longitude"]]
+                    [zipcode, coords["latitude"], coords["longitude"], coords["city"]]
                 )
     except KeyError:
         raise RuntimeError("Unexpected program data format")

@@ -65,9 +65,11 @@ class MainController:
             )
             self.program_data[zipcode] = {
                 "latitude": coords["latitude"],
-                "longitude": coords["longitude"]
+                "longitude": coords["longitude"],
+                "city": coords["city"]
             }
         zip_item = QTreeWidgetItem(None, [zipcode])
         QTreeWidgetItem(zip_item, ["latitude:", str(coords["latitude"])])
         QTreeWidgetItem(zip_item, ["longitude:", str(coords["longitude"])])
+        QTreeWidgetItem(zip_item, ["city:", str(coords["city"])])
         self.main_window.zip_code_list.addTopLevelItem(zip_item)
