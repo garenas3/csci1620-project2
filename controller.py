@@ -69,7 +69,7 @@ class MainController:
                 "city": coords["city"]
             }
         zip_item = QTreeWidgetItem(None, [zipcode])
-        QTreeWidgetItem(zip_item, ["latitude:", str(coords["latitude"])])
-        QTreeWidgetItem(zip_item, ["longitude:", str(coords["longitude"])])
-        QTreeWidgetItem(zip_item, ["city:", str(coords["city"])])
+        QTreeWidgetItem(zip_item, ["Latitude:", str(coords["latitude"])])
+        QTreeWidgetItem(zip_item, ["Longitude:", str(coords["longitude"])])
+        QTreeWidgetItem(zip_item, ["City:", str(coords["city"])])
         self.main_window.zip_code_list.addTopLevelItem(zip_item)
