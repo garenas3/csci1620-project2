@@ -27,7 +27,7 @@ def get_zipcode_location(username: str, zipcode: str):
             if response:
                 error_message = response["status"]["message"]
                 error_code = response["status"]["value"]
-                raise Exception(f"GeoNames Webservice Exception ({error_code}): {error_message}")
+                raise RuntimeError(f"GeoNames Webservice Exception ({error_code}): {error_message}")
             else:
                 r.raise_for_status()
         result = response["postalCodes"][0]
@@ -35,7 +35,7 @@ def get_zipcode_location(username: str, zipcode: str):
                 "longitude": result["lng"],
                 "city": f'{result["placeName"]}, {result["ISO3166-2"]}'}
     except requests.exceptions.JSONDecodeError:
-        raise Exception("Unable to parse JSON")
+        raise RuntimeError("Unable to parse JSON")
 
 
 def load_username() -> str:
