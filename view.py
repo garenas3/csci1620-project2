@@ -1,3 +1,6 @@
+from typing import Callable, Any
+
+from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import (QWidget, QLineEdit, QFormLayout, QHBoxLayout,
                              QVBoxLayout, QPushButton, QTreeWidget,
                              QHeaderView, QMainWindow, QLabel)
@@ -11,6 +14,7 @@ class MainWindow(QMainWindow):
         self.submit_button = QPushButton("Submit")
         self.close_button = QPushButton("Close")
         self.status_bar = self.statusBar()
+        self.on_close: Callable[..., Any] | None = None
         self.setWindowTitle('Frost Dates')
         self.setUpWidgets()
 
@@ -44,3 +48,8 @@ class MainWindow(QMainWindow):
         self.submit_button.setStatusTip("Get location data from GeoNames.")
         self.close_button.setStatusTip("Close the program.")
         self.submit_button.setDefault(True)
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        if self.on_close:
+            self.on_close()
+        event.accept()
