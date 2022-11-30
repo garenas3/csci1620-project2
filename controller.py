@@ -28,9 +28,9 @@ class MainController:
 
     def submit_zip_code(self) -> None:
         """Submit the ZIP code displayed in the ZIP code line edit."""
-        zip_code = self.main_window.zip_code_edit.text()
-        zip_code = zip_code.strip()
-        match = re.match(r"\d{5}", zip_code)
+        zipcode = self.main_window.zip_code_edit.text()
+        zipcode = zipcode.strip()
+        match = re.match(r"\d{5}", zipcode)
         if not match:
             QMessageBox.warning(
                 self.main_window,
@@ -38,18 +38,18 @@ class MainController:
                 "A 5-digit ZIP code is required."
             )
             return
-        if self.main_window.zip_code_list.findItems(zip_code, Qt.MatchFlag.MatchExactly):
-            self.main_window.status_bar.showMessage(f"Duplicate request for {zip_code}")
+        if self.main_window.zip_code_list.findItems(zipcode, Qt.MatchFlag.MatchExactly):
+            self.main_window.status_bar.showMessage(f"Duplicate request for {zipcode}")
             return
         try:
-            coords = self.program_cache[zip_code]
+            coords = self.program_cache[zipcode]
         except KeyError:
             coords = geonames_api.get_zipcode_location(
                 username=self.geonames_username,
-                zipcode=zip_code
+                zipcode=zipcode
             )
-            self.program_cache[zip_code] = coords
-        zip_item = QTreeWidgetItem(None, [zip_code])
+            self.program_cache[zipcode] = coords
+        zip_item = QTreeWidgetItem(None, [zipcode])
         QTreeWidgetItem(zip_item, ["latitude:", str(coords["latitude"])])
         QTreeWidgetItem(zip_item, ["longitude:", str(coords["longitude"])])
         self.main_window.zip_code_list.addTopLevelItem(zip_item)
