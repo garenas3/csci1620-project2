@@ -40,3 +40,11 @@ def load_username() -> str:
     """Load the GeoNames username from the file geonames.txt."""
     with open('geonames.txt', 'r') as fh:
         return fh.read().strip()
+
+
+def main():
+    pass
+
+
+if __name__ == "__main__":
+    main()
