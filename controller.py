@@ -1,3 +1,5 @@
+import requests
+
 from view import MainWindow
 
 
@@ -22,3 +24,38 @@ class MainController:
         """Submit the zip code displayed in the zip code line edit."""
         zip_code = self.main_window.zip_code_edit.text()
         self.main_window.zip_code_list.addItems([zip_code])
+
+
+def get_zipcode_location(username: str, zipcode: str):
+    """Get the zip code location using GeoNames web services.
+
+    For more information about GeoNames web services:
+    https://www.geonames.org/export/web-services.html
+
+    Args:
+        username: The username to use for the application.
+        zipcode: The US postal code to use for the search.
+    Returns:
+        The coordinates associated with the zip code.
+    """
+    payload = {                 # maxRows <= 500 uses 2 credits per request
+        'postalcode': zipcode,  # zip codes are exclusive to US
+        'country': 'US',        # restrict results to US
+        'radius': 30,           # 30 km is max radius for free accounts
+        'maxRows': 1,           # assume first row is correct latitude and longitude
+        'username': username    # username should be unique to application
+    }
+    r = requests.get('https://secure.geonames.org/findNearbyPostalCodesJSON', params=payload)
+    try:
+        response = r.json()
+        if not r.ok:
+            if response:
+                error_message = response['status']['message']
+                error_code = response['status']['value']
+                raise Exception(f'GeoNames Webservice Exception ({error_code}): {error_message}')
+            else:
+                r.raise_for_status()
+        result = response['postalCodes'][0]
+        return {'latitude': result['lat'], 'longitude': result['lng']}
+    except requests.exceptions.JSONDecodeError:
+        raise Exception('Unable to parse JSON')
