@@ -36,7 +36,7 @@ def get_zipcode_location(username: str, zipcode: str):
         raise Exception('Unable to parse JSON')
 
 
-def load_geonames_username() -> str:
+def load_username() -> str:
     """Load the GeoNames username from the file geonames.txt."""
     with open('geonames.txt', 'r') as fh:
         return fh.read().strip()
