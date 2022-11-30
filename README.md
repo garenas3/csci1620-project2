@@ -19,4 +19,4 @@ longitude coordinate pair.
 1. Create an account for the application using the [login page](https://www.geonames.org/login).
 2. Supply the username as a URL parameter for all requests.
 
-For more information about GeoNames web services, [click here](https://www.geonames.org/export/web-services.html).
+Visit the [GeoNames web services documentation](https://www.geonames.org/export/web-services.html) for more information.
