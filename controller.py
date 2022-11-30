@@ -64,6 +64,7 @@ class MainController:
                 f"Request completed in {time_end - time_start:.3f} s."
             )
             self.program_data[zipcode] = {
+                "zipcode": zipcode,
                 "latitude": coords["latitude"],
                 "longitude": coords["longitude"],
                 "city": coords["city"]
