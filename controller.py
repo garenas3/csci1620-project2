@@ -1,4 +1,5 @@
 import re
+import time
 
 from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox
 from PyQt5.QtCore import Qt
@@ -45,10 +46,22 @@ class MainController:
             return
         try:
             coords = self.program_data[zipcode]
+            self.main_window.status_bar.showMessage(
+                "Data loaded from cache."
+            )
         except KeyError:
+            time_start = time.perf_counter()
+            self.main_window.status_bar.showMessage(
+                f"Request to fetch location data ..."
+            )
+            self.main_window.repaint()
             coords = geonames_api.get_zipcode_location(
                 username=self.geonames_username,
                 zipcode=zipcode
+            )
+            time_end = time.perf_counter()
+            self.main_window.status_bar.showMessage(
+                f"Request completed in {time_end - time_start:.3f} s."
             )
             self.program_data[zipcode] = {
                 "latitude": coords["latitude"],
