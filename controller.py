@@ -10,6 +10,7 @@ class MainController:
     def __init__(self) -> None:
         self.geonames_username = geonames_api.load_username()
         self.main_window = MainWindow()
+        self.program_cache = {}
         self.set_up_signals_and_slots()
 
     def show(self) -> None:
@@ -36,10 +37,14 @@ class MainController:
                 "A 5-digit ZIP code is required."
             )
             return
-        coords = geonames_api.get_zipcode_location(
-            username=self.geonames_username,
-            zipcode=zip_code
-        )
+        try:
+            coords = self.program_cache[zip_code]
+        except KeyError:
+            coords = geonames_api.get_zipcode_location(
+                username=self.geonames_username,
+                zipcode=zip_code
+            )
+            self.program_cache[zip_code] = coords
         zip_item = QTreeWidgetItem(None, [zip_code])
         QTreeWidgetItem(zip_item, ["latitude:", str(coords["latitude"])])
         QTreeWidgetItem(zip_item, ["longitude:", str(coords["longitude"])])
