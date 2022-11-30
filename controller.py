@@ -1,6 +1,7 @@
 import re
 
 from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox
+from PyQt5.QtCore import Qt
 
 from view import MainWindow
 import geonames_api
@@ -36,6 +37,9 @@ class MainController:
                 "ZIP code is required",
                 "A 5-digit ZIP code is required."
             )
+            return
+        if self.main_window.zip_code_list.findItems(zip_code, Qt.MatchFlag.MatchExactly):
+            self.main_window.status_bar.showMessage(f"Duplicate request for {zip_code}")
             return
         try:
             coords = self.program_cache[zip_code]
