@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import (QWidget, QLineEdit, QFormLayout, QHBoxLayout,
-                             QVBoxLayout, QPushButton, QTreeWidget,
-                             QTreeWidgetItem)
+                             QVBoxLayout, QPushButton, QTreeWidget)
 
 
 class MainWindow(QWidget):
