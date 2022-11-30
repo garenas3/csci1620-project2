@@ -1,3 +1,5 @@
+import re
+
 from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox
 
 from view import MainWindow
@@ -26,7 +28,8 @@ class MainController:
         """Submit the ZIP code displayed in the ZIP code line edit."""
         zip_code = self.main_window.zip_code_edit.text()
         zip_code = zip_code.strip()
-        if not zip_code:
+        match = re.match(r"\d{5}", zip_code)
+        if not match:
             QMessageBox.warning(
                 self.main_window,
                 "ZIP code is required",
