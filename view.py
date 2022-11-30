@@ -39,7 +39,7 @@ class MainWindow(QMainWindow):
         main_layout.addLayout(buttons_layout)
         central_widget.setLayout(main_layout)
         self.setCentralWidget(central_widget)
-        self.zip_code_edit.setStatusTip("Enter 6-digit US ZIP code.")
+        self.zip_code_edit.setStatusTip("Enter 5-digit US ZIP code.")
         self.zip_code_list.setStatusTip("Location data returned for ZIP codes.")
         self.submit_button.setStatusTip("Get location data from GeoNames.")
         self.close_button.setStatusTip("Close the program.")
