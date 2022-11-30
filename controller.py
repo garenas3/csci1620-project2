@@ -33,7 +33,7 @@ class MainController:
             QMessageBox.warning(
                 self.main_window,
                 "ZIP code is required",
-                "A 6-digit ZIP code is required."
+                "A 5-digit ZIP code is required."
             )
             return
         coords = geonames_api.get_zipcode_location(
