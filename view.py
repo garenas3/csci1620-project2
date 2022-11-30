@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import (QWidget, QLineEdit, QFormLayout, QHBoxLayout,
-                             QVBoxLayout, QPushButton, QTreeWidget)
+                             QVBoxLayout, QPushButton, QTreeWidget,
+                             QHeaderView)
 
 
 class MainWindow(QWidget):
@@ -17,6 +18,8 @@ class MainWindow(QWidget):
         form_layout = QFormLayout()
         form_layout.addRow("ZIP Code:", self.zip_code_edit)
         self.zip_code_list.setColumnCount(2)
+        header = self.zip_code_list.header()
+        header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.zip_code_list.setHeaderHidden(True)
         buttons_layout = QHBoxLayout()
         buttons_layout.addWidget(self.submit_button)
