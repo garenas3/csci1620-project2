@@ -1,7 +1,8 @@
 import csv
+from typing import Any
 
 
-def load(filename: str = "programdata.csv") -> dict[str, str]:
+def load(filename: str = "programdata.csv") -> dict[str, dict[str, Any]]:
     """Load the program cache from a file."""
     try:
         with open(filename, 'r', newline='') as fh:
