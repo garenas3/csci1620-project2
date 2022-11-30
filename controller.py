@@ -59,3 +59,8 @@ def get_zipcode_location(username: str, zipcode: str):
         return {'latitude': result['lat'], 'longitude': result['lng']}
     except requests.exceptions.JSONDecodeError:
         raise Exception('Unable to parse JSON')
+
+
+def load_geonames_username() -> str:
+    with open('geonames.txt', 'r') as fh:
+        return fh.read().strip()
