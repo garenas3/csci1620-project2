@@ -45,7 +45,7 @@ class MainController:
             self.main_window.status_bar.showMessage(f"Duplicate request for {zipcode}.")
             return
         try:
-            coords = self.program_data[zipcode]
+            zipcode_result = self.program_data[zipcode]
             self.main_window.status_bar.showMessage(
                 "Data loaded from cache."
             )
@@ -55,7 +55,7 @@ class MainController:
                 f"Request to fetch location data ..."
             )
             self.main_window.repaint()
-            coords = geonames_api.get_zipcode_location(
+            zipcode_result = geonames_api.get_zipcode_location(
                 username=self.geonames_username,
                 zipcode=zipcode
             )
@@ -63,11 +63,11 @@ class MainController:
             self.main_window.status_bar.showMessage(
                 f"Request completed in {time_end - time_start:.3f} s."
             )
-            self.program_data[zipcode] = coords
+            self.program_data[zipcode] = zipcode_result
         self.add_zip_code_item(zipcode,
-                               coords["latitude"],
-                               coords["longitude"],
-                               coords["city"])
+                               zipcode_result["latitude"],
+                               zipcode_result["longitude"],
+                               zipcode_result["city"])
 
     def add_zip_code_item(self, zipcode, latitude, longitude, city):
         """Add a ZIP code item to the list."""
