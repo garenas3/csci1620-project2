@@ -1,12 +1,13 @@
 from PyQt5.QtWidgets import (QWidget, QLineEdit, QFormLayout, QHBoxLayout,
-                             QVBoxLayout, QPushButton, QListWidget)
+                             QVBoxLayout, QPushButton, QTreeWidget,
+                             QTreeWidgetItem)
 
 
 class MainWindow(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.zip_code_edit = QLineEdit()
-        self.zip_code_list = QListWidget()
+        self.zip_code_list = QTreeWidget()
         self.submit_button = QPushButton("Submit")
         self.close_button = QPushButton("Close")
         self.setWindowTitle('Frost Dates')
@@ -16,6 +17,8 @@ class MainWindow(QWidget):
         """Set up the widgets in the main window."""
         form_layout = QFormLayout()
         form_layout.addRow("Zip Code:", self.zip_code_edit)
+        self.zip_code_list.setColumnCount(1)
+        self.zip_code_list.setHeaderHidden(True)
         buttons_layout = QHBoxLayout()
         buttons_layout.addWidget(self.submit_button)
         buttons_layout.addWidget(self.close_button)

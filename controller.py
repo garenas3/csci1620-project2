@@ -1,3 +1,5 @@
+from PyQt5.QtWidgets import QTreeWidgetItem
+
 from view import MainWindow
 
 
@@ -21,4 +23,5 @@ class MainController:
     def submit_zip_code(self) -> None:
         """Submit the zip code displayed in the zip code line edit."""
         zip_code = self.main_window.zip_code_edit.text()
-        self.main_window.zip_code_list.addItems([zip_code])
+        item = QTreeWidgetItem(None, [zip_code])
+        self.main_window.zip_code_list.addTopLevelItem(item)
