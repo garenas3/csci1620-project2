@@ -31,7 +31,8 @@ def get_zipcode_location(username: str, zipcode: str):
             else:
                 r.raise_for_status()
         result = response["postalCodes"][0]
-        return {"latitude": result["lat"],
+        return {"zipcode": zipcode,
+                "latitude": result["lat"],
                 "longitude": result["lng"],
                 "city": f'{result["placeName"]}, {result["ISO3166-2"]}'}
     except requests.exceptions.JSONDecodeError:
