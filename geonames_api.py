@@ -20,7 +20,7 @@ def get_zipcode_location(username: str, zipcode: str):
         "maxRows": 1,           # assume first row is correct latitude and longitude
         "username": username    # username should be unique to application
     }
-    r = requests.get("https://secure.geonames.org/findNearbyPostalCodesJSON", params=payload)
+    r = requests.get("https://secure.geonames.org/postalCodeSearchJSON", params=payload)
     try:
         response = r.json()
         if not r.ok:
