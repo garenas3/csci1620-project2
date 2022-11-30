@@ -11,8 +11,8 @@ class MainController:
     def __init__(self) -> None:
         self.geonames_username = geonames_api.load_username()
         self.main_window = MainWindow()
-        self.program_cache = load_program_cache()
-        self.main_window.on_close = lambda: save_program_cache(self.program_cache)
+        self.program_data = load_program_data()
+        self.main_window.on_close = lambda: save_program_data(self.program_data)
         self.set_up_signals_and_slots()
 
     def show(self) -> None:
@@ -43,20 +43,20 @@ class MainController:
             self.main_window.status_bar.showMessage(f"Duplicate request for {zipcode}.")
             return
         try:
-            coords = self.program_cache[zipcode]
+            coords = self.program_data[zipcode]
         except KeyError:
             coords = geonames_api.get_zipcode_location(
                 username=self.geonames_username,
                 zipcode=zipcode
             )
-            self.program_cache[zipcode] = coords
+            self.program_data[zipcode] = coords
         zip_item = QTreeWidgetItem(None, [zipcode])
         QTreeWidgetItem(zip_item, ["latitude:", str(coords["latitude"])])
         QTreeWidgetItem(zip_item, ["longitude:", str(coords["longitude"])])
         self.main_window.zip_code_list.addTopLevelItem(zip_item)
 
 
-def load_program_cache(filename: str = "programdata.csv") -> dict[str, str]:
+def load_program_data(filename: str = "programdata.csv") -> dict[str, str]:
     """Load the program cache from a file."""
     try:
         with open(filename, 'r', newline='') as fh:
@@ -65,8 +65,8 @@ def load_program_cache(filename: str = "programdata.csv") -> dict[str, str]:
         return {}
 
 
-def save_program_cache(data: dict[str, str],
-                       filename: str = "programdata.csv") -> None:
+def save_program_data(data: dict[str, str],
+                      filename: str = "programdata.csv") -> None:
     """Save the program cache to a file."""
     with open(filename, 'w', newline='') as fh:
         pass
