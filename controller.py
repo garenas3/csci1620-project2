@@ -64,12 +64,9 @@ class MainController:
                 f"Request completed in {time_end - time_start:.3f} s."
             )
             self.program_data[zipcode] = zipcode_result
-        self.add_zip_code_item(zipcode,
-                               zipcode_result["latitude"],
-                               zipcode_result["longitude"],
-                               zipcode_result["city"])
+        self.add_zip_code_item(**zipcode_result)
 
-    def add_zip_code_item(self, zipcode, latitude, longitude, city):
+    def add_zip_code_item(self, *, zipcode, latitude, longitude, city):
         """Add a ZIP code item to the list."""
         zip_item = QTreeWidgetItem(None, [str(zipcode)])
         QTreeWidgetItem(zip_item, ["Latitude:", str(latitude)])
