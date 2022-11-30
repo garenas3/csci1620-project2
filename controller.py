@@ -39,7 +39,7 @@ class MainController:
             )
             return
         if self.main_window.zip_code_list.findItems(zipcode, Qt.MatchFlag.MatchExactly):
-            self.main_window.status_bar.showMessage(f"Duplicate request for {zipcode}")
+            self.main_window.status_bar.showMessage(f"Duplicate request for {zipcode}.")
             return
         try:
             coords = self.program_cache[zipcode]
