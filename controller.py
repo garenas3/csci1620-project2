@@ -1,10 +1,12 @@
 from PyQt5.QtWidgets import QTreeWidgetItem
 
 from view import MainWindow
+import geonames_api
 
 
 class MainController:
     def __init__(self) -> None:
+        self.geonames_username = geonames_api.load_username()
         self.main_window = MainWindow()
         self.set_up_signals_and_slots()
 
@@ -23,5 +25,11 @@ class MainController:
     def submit_zip_code(self) -> None:
         """Submit the ZIP code displayed in the ZIP code line edit."""
         zip_code = self.main_window.zip_code_edit.text()
-        item = QTreeWidgetItem(None, [zip_code])
-        self.main_window.zip_code_list.addTopLevelItem(item)
+        coords = geonames_api.get_zipcode_location(
+            username=self.geonames_username,
+            zipcode=zip_code
+        )
+        zip_item = QTreeWidgetItem(None, [zip_code])
+        QTreeWidgetItem(zip_item, ["latitude:", str(coords["latitude"])])
+        QTreeWidgetItem(zip_item, ["longitude:", str(coords["longitude"])])
+        self.main_window.zip_code_list.addTopLevelItem(zip_item)
