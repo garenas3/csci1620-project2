@@ -13,3 +13,10 @@ Website: [https://www.geonames.org/](https://www.geonames.org/)
 
 The GeoNames API can be used to input a ZIP code and return a latitude and
 longitude coordinate pair.
+
+### How to use GeoNames API
+
+1. Create an account for the application using the [login page](https://www.geonames.org/login).
+2. Supply the username as a URL parameter for all requests.
+
+For more information about GeoNames web services, [click here](https://www.geonames.org/export/web-services.html).
