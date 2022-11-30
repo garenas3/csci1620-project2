@@ -20,3 +20,6 @@ longitude coordinate pair.
 2. Supply the username as a URL parameter for all requests.
 
 Visit the [GeoNames web services documentation](https://www.geonames.org/export/web-services.html) for more information.
+
+For this application, store the GeoNames username in a file named geonames.txt
+in the same directory as this README.
