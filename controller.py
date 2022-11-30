@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QTreeWidgetItem
+from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox
 
 from view import MainWindow
 import geonames_api
@@ -25,6 +25,14 @@ class MainController:
     def submit_zip_code(self) -> None:
         """Submit the ZIP code displayed in the ZIP code line edit."""
         zip_code = self.main_window.zip_code_edit.text()
+        zip_code = zip_code.strip()
+        if not zip_code:
+            QMessageBox.warning(
+                self.main_window,
+                "ZIP code is required",
+                "A 6-digit ZIP code is required."
+            )
+            return
         coords = geonames_api.get_zipcode_location(
             username=self.geonames_username,
             zipcode=zip_code
