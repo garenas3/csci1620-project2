@@ -1,4 +1,5 @@
 import re
+import csv
 
 from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox
 from PyQt5.QtCore import Qt
@@ -49,7 +50,10 @@ class MainController:
                 username=self.geonames_username,
                 zipcode=zipcode
             )
-            self.program_data[zipcode] = coords
+            self.program_data[zipcode] = {
+                "latitude": coords["latitude"],
+                "longitude": coords["longitude"]
+            }
         zip_item = QTreeWidgetItem(None, [zipcode])
         QTreeWidgetItem(zip_item, ["latitude:", str(coords["latitude"])])
         QTreeWidgetItem(zip_item, ["longitude:", str(coords["longitude"])])
@@ -60,7 +64,16 @@ def load_program_data(filename: str = "programdata.csv") -> dict[str, str]:
     """Load the program cache from a file."""
     try:
         with open(filename, 'r', newline='') as fh:
-            pass
+            result = {}
+            fh.readline()  # read header
+            reader = csv.reader(fh)
+            for row in reader:
+                zipcode = row[0]
+                latitude = row[1]
+                longitude = row[2]
+                result[zipcode] = {"latitude": latitude,
+                                   "longitude": longitude}
+            return result
     except FileNotFoundError:
         return {}
 
@@ -68,5 +81,15 @@ def load_program_data(filename: str = "programdata.csv") -> dict[str, str]:
 def save_program_data(data: dict[str, str],
                       filename: str = "programdata.csv") -> None:
     """Save the program cache to a file."""
-    with open(filename, 'w', newline='') as fh:
-        pass
+    if not data:
+        return
+    try:
+        with open(filename, 'w', newline='') as fh:
+            writer = csv.writer(fh)
+            writer.writerow(["zipcode", "latitude", "longitude"])
+            for zipcode, coords in data.items():
+                writer.writerow(
+                    [zipcode, coords["latitude"], coords["longitude"]]
+                )
+    except KeyError:
+        raise RuntimeError("Unexpected program data format")
