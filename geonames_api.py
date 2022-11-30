@@ -2,7 +2,7 @@ import requests
 
 
 def get_zipcode_location(username: str, zipcode: str):
-    """Get the zip code location using GeoNames web services.
+    """Get the ZIP code location using GeoNames web services.
 
     For more information about GeoNames web services:
     https://www.geonames.org/export/web-services.html
@@ -14,7 +14,7 @@ def get_zipcode_location(username: str, zipcode: str):
         The coordinates associated with the zip code.
     """
     payload = {                 # maxRows <= 500 uses 2 credits per request
-        "postalcode": zipcode,  # zip codes are exclusive to US
+        "postalcode": zipcode,  # ZIP codes are exclusive to US
         "country": "US",        # restrict results to US
         "radius": 30,           # 30 km is max radius for free accounts
         "maxRows": 1,           # assume first row is correct latitude and longitude
