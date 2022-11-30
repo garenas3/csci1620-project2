@@ -15,7 +15,7 @@ class MainWindow(QWidget):
     def setUpWidgets(self):
         """Set up the widgets in the main window."""
         form_layout = QFormLayout()
-        form_layout.addRow("Zip Code:", self.zip_code_edit)
+        form_layout.addRow("ZIP Code:", self.zip_code_edit)
         self.zip_code_list.setColumnCount(1)
         self.zip_code_list.setHeaderHidden(True)
         buttons_layout = QHBoxLayout()
