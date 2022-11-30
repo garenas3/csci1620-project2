@@ -63,12 +63,7 @@ class MainController:
             self.main_window.status_bar.showMessage(
                 f"Request completed in {time_end - time_start:.3f} s."
             )
-            self.program_data[zipcode] = {
-                "zipcode": zipcode,
-                "latitude": coords["latitude"],
-                "longitude": coords["longitude"],
-                "city": coords["city"]
-            }
+            self.program_data[zipcode] = coords
         self.add_zip_code_item(zipcode,
                                coords["latitude"],
                                coords["longitude"],
