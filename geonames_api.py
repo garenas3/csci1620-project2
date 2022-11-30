@@ -43,7 +43,10 @@ def load_username() -> str:
 
 
 def main():
-    pass
+    username = load_username()
+    zipcode = input("Enter ZIP code: ")
+    location = get_zipcode_location(username=username, zipcode=zipcode)
+    print(location)
 
 
 if __name__ == "__main__":
