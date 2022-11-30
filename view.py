@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (QWidget, QLineEdit, QFormLayout, QHBoxLayout,
                              QVBoxLayout, QPushButton, QTreeWidget,
-                             QHeaderView, QMainWindow)
+                             QHeaderView, QMainWindow, QLabel)
 
 
 class MainWindow(QMainWindow):
@@ -27,6 +27,13 @@ class MainWindow(QMainWindow):
         buttons_layout.addWidget(self.submit_button)
         buttons_layout.addWidget(self.close_button)
         main_layout = QVBoxLayout()
+        instructions = QLabel()
+        instructions.setText(
+            "Enter 5-digit zip code in the text box and click submit "
+            "to fetch latitude and longitude data."
+        )
+        instructions.setWordWrap(True)
+        main_layout.addWidget(instructions)
         main_layout.addLayout(form_layout)
         main_layout.addWidget(self.zip_code_list)
         main_layout.addLayout(buttons_layout)
@@ -35,3 +42,4 @@ class MainWindow(QMainWindow):
         self.zip_code_edit.setStatusTip("Enter 6-digit US ZIP code.")
         self.submit_button.setStatusTip("Get location data from GeoNames.")
         self.close_button.setStatusTip("Close the program.")
+        self.submit_button.setDefault(True)
