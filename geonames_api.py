@@ -1,8 +1,10 @@
+from typing import Any
+
 import requests
 from PyQt5.QtCore import QThread, QObject, pyqtSignal
 
 
-def get_zipcode_location(username: str, zipcode: str):
+def get_zipcode_location(username: str, zipcode: str) -> dict[str, Any]:
     """Get the ZIP code location using GeoNames web services.
 
     For more information about GeoNames web services:
@@ -49,13 +51,13 @@ class GetZIPCodeAsyncController(QObject):
     """Send the ZIP code request asynchronously."""
     result_ready = pyqtSignal(dict)
 
-    def __init__(self, username: str):
+    def __init__(self, username: str) -> None:
         super().__init__()
         self.username = username
         self._worker = None
         self._worker_thread = None
 
-    def sendRequest(self, zipcode: str):
+    def sendRequest(self, zipcode: str) -> None:
         """Start up a thread to send the request."""
         self._worker_thread = QThread()
         self._worker = _GetZIPCodeAsyncWorker(self.username, zipcode)
@@ -72,12 +74,12 @@ class _GetZIPCodeAsyncWorker(QObject):
     """Worker to perform asynchronous ZIP code info retrieval."""
     result_ready = pyqtSignal(dict)
 
-    def __init__(self, geonames_username: str, zipcode: str):
+    def __init__(self, geonames_username: str, zipcode: str) -> None:
         super().__init__()
         self.geonames_username = geonames_username
         self.zipcode = zipcode
 
-    def doWork(self):
+    def doWork(self) -> None:
         result = get_zipcode_location(
             username=self.geonames_username,
             zipcode=self.zipcode
