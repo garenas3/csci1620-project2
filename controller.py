@@ -57,7 +57,6 @@ class MainController:
 
     def send_zip_code_request(self, zipcode: str):
         """Send the ZIP code request via API and update window."""
-        self.main_window.repaint()
         zipcode_result = geonames_api.get_zipcode_location(
             username=self.geonames_username,
             zipcode=zipcode
