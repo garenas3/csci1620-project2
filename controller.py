@@ -2,7 +2,7 @@ import re
 import time
 
 from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox
-from PyQt5.QtCore import Qt, QThread, pyqtSignal
+from PyQt5.QtCore import Qt, QThread, pyqtSignal, QObject
 
 from view import MainWindow
 import geonames_api
@@ -15,6 +15,7 @@ class MainController:
         self.main_window = MainWindow()
         self.program_data = programdata.load()
         self.main_window.on_close = lambda: programdata.save(self.program_data)
+        self.worker_thread = QThread()
         self.set_up_signals_and_slots()
 
     def show(self) -> None:
@@ -81,9 +82,9 @@ class MainController:
         self.main_window.zip_code_list.addTopLevelItem(zip_item)
 
 
-class FetchZipCodeWorker(QThread):
+class FetchZipCodeWorker(QObject):
     """Fetch the ZIP code info asynchronously."""
-    results_ready = pyqtSignal(dict)
+    result_ready = pyqtSignal(dict)
     request_cancelled = pyqtSignal()
     request_error = pyqtSignal(RuntimeError)
 
