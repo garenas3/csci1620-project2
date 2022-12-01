@@ -1,4 +1,5 @@
 import requests
+from PyQt5.QtCore import QThread, QObject, pyqtSignal
 
 
 def get_zipcode_location(username: str, zipcode: str):
@@ -43,6 +44,46 @@ def load_username() -> str:
     """Load the GeoNames username from the file geonames.txt."""
     with open("geonames.txt", "r") as fh:
         return fh.read().strip()
+
+
+class GetZIPCodeAsyncController(QObject):
+    """Send the ZIP code request asynchronously."""
+    result_ready = pyqtSignal(dict)
+
+    def __init__(self, username: str):
+        super().__init__()
+        self.username = username
+        self._worker = None
+        self._worker_thread = None
+
+    def sendRequest(self, zipcode: str):
+        """Start up a thread to send the request."""
+        self._worker_thread = QThread()
+        self._worker = _GetZIPCodeAsyncWorker(self.username, zipcode)
+        self._worker.moveToThread(self._worker_thread)
+        self._worker_thread.started.connect(self._worker.doWork)
+        self._worker.result_ready.connect(self.result_ready)
+        self._worker.result_ready.connect(self._worker_thread.quit)
+        self._worker.result_ready.connect(self._worker.deleteLater)
+        self._worker_thread.finished.connect(self._worker_thread.deleteLater)
+        self._worker_thread.start()
+
+
+class _GetZIPCodeAsyncWorker(QObject):
+    """Worker to perform asynchronous ZIP code info retrieval."""
+    result_ready = pyqtSignal(dict)
+
+    def __init__(self, geonames_username: str, zipcode: str):
+        super().__init__()
+        self.geonames_username = geonames_username
+        self.zipcode = zipcode
+
+    def doWork(self):
+        result = get_zipcode_location(
+            username=self.geonames_username,
+            zipcode=self.zipcode
+        )
+        self.result_ready.emit(result)
 
 
 def main():

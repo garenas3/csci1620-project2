@@ -1,8 +1,7 @@
 import re
-import time
 
 from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox
-from PyQt5.QtCore import Qt, QThread, pyqtSignal, QObject
+from PyQt5.QtCore import Qt
 
 from view import MainWindow
 import geonames_api
@@ -11,7 +10,9 @@ import programdata
 
 class MainController:
     def __init__(self) -> None:
-        self.geonames_username = geonames_api.load_username()
+        self.geonames_controller = geonames_api.GetZIPCodeAsyncController(
+            geonames_api.load_username()
+        )
         self.main_window = MainWindow()
         self.program_data = programdata.load()
         self.main_window.on_close = lambda: programdata.save(self.program_data)
@@ -28,6 +29,11 @@ class MainController:
         self.main_window.zip_code_edit.returnPressed.connect(
             self.submit_zip_code
         )
+        self.geonames_controller.result_ready.connect(
+            lambda: self.main_window.status_bar.showMessage("Request successful.")
+        )
+        self.geonames_controller.result_ready.connect(lambda result: self.set_program_data(result))
+        self.geonames_controller.result_ready.connect(lambda result: self.add_zip_code_item(**result))
 
     def submit_zip_code(self) -> None:
         """Submit the ZIP code displayed in the ZIP code line edit."""
@@ -52,23 +58,12 @@ class MainController:
             )
             return
         except KeyError:
-            self.send_zip_code_request(zipcode)
+            self.main_window.status_bar.showMessage("Requesting ZIP code data ...")
+            self.geonames_controller.sendRequest(zipcode)
 
-    def send_zip_code_request(self, zipcode: str):
-        """Send the ZIP code request via API and update window."""
-        self.worker_thread = QThread()
-        self.worker = Worker(self.geonames_username, zipcode)
-        self.worker.moveToThread(self.worker_thread)
-        self.worker_thread.started.connect(self.worker.doWork)
-        self.worker.result_ready.connect(self.worker_thread.quit)
-        self.worker.result_ready.connect(self.worker.deleteLater)
-        self.worker.result_ready.connect(lambda result: self.set_program_data(zipcode, result))
-        self.worker.result_ready.connect(lambda result: self.add_zip_code_item(**result))
-        self.worker_thread.finished.connect(self.worker_thread.deleteLater)
-        self.worker_thread.start()
-
-    def set_program_data(self, zipcode, result):
+    def set_program_data(self, result):
         """Set the program data for the zipcode entry."""
+        zipcode = result['zipcode']
         self.program_data[zipcode] = result
 
     def add_zip_code_item(self, *, zipcode, latitude, longitude, city):
@@ -78,20 +73,3 @@ class MainController:
         QTreeWidgetItem(zip_item, ["Longitude:", str(longitude)])
         QTreeWidgetItem(zip_item, ["City:", city])
         self.main_window.zip_code_list.addTopLevelItem(zip_item)
-
-
-class Worker(QObject):
-    """Fetch the ZIP code info asynchronously."""
-    result_ready = pyqtSignal(dict)
-
-    def __init__(self, geonames_username: str, zipcode: str):
-        super().__init__()
-        self.geonames_username = geonames_username
-        self.zipcode = zipcode
-
-    def doWork(self):
-        result = geonames_api.get_zipcode_location(
-            username=self.geonames_username,
-            zipcode=self.zipcode
-        )
-        self.result_ready.emit(result)
