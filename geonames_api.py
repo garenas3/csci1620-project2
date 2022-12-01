@@ -67,7 +67,22 @@ class GetZIPCodeAsyncController(QObject):
         self._worker_thread = None
 
     def sendRequest(self, zipcode: str) -> None:
-        """Start up a thread to send the request."""
+        """Start up a thread to send the request.
+
+        Connection chain adapted from blog and official documentation.
+
+        https://doc.qt.io/qt-5/qthread.html
+
+        https://mayaposch.wordpress.com/2011/11/01/how-to-really-truly-use-qthreads-the-full-explanation/
+
+        A lot of PyQt QThread examples use a subclass then call
+        QThread.terminate() and QThread.wait() for cleanup, but this is
+        discouraged for a variety of reasons.
+
+        https://www.vikingsoftware.com/blog/how-to-use-qthread-properly/
+
+        https://www.qt.io/blog/2010/06/17/youre-doing-it-wrong
+        """
         self._worker_thread = QThread()
         self._worker = _GetZIPCodeAsyncWorker(self.username, zipcode)
         self._worker.moveToThread(self._worker_thread)
