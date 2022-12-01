@@ -61,6 +61,11 @@ class GetZIPCodeAsyncController(QObject):
     result_ready = pyqtSignal(dict)
 
     def __init__(self, username: str) -> None:
+        """Initialize the AsyncController.
+
+        The worker and worker thread need to be class instance
+        variables otherwise they will be deleted before processing.
+        """
         super().__init__()
         self.username = username
         self._worker = None
