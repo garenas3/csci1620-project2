@@ -87,16 +87,19 @@ class GetZIPCodeAsyncController(QObject):
         self._worker = _GetZIPCodeAsyncWorker(self.username, zipcode)
         self._worker.moveToThread(self._worker_thread)
         self._worker_thread.started.connect(self._worker.doWork)
-        self._worker.result_ready.connect(self.result_ready)
-        self._worker.result_ready.connect(self._worker_thread.quit)
-        self._worker.result_ready.connect(self._worker.deleteLater)
+        self._worker.finished.connect(self._worker_thread.quit)
+        self._worker.finished.connect(self._worker.deleteLater)
         self._worker_thread.finished.connect(self._worker_thread.deleteLater)
+
+        self._worker.result_ready.connect(self.result_ready)
+
         self._worker_thread.start()
 
 
 class _GetZIPCodeAsyncWorker(QObject):
     """Worker to perform asynchronous ZIP code info retrieval."""
     result_ready = pyqtSignal(dict)
+    finished = pyqtSignal()
 
     def __init__(self, geonames_username: str, zipcode: str) -> None:
         super().__init__()
@@ -109,6 +112,7 @@ class _GetZIPCodeAsyncWorker(QObject):
             zipcode=self.zipcode
         )
         self.result_ready.emit(result)
+        self.finished.emit()
 
 
 def main():
