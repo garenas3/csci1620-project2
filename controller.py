@@ -57,12 +57,14 @@ class MainController:
 
     def send_zip_code_request(self, zipcode: str):
         """Send the ZIP code request via API and update window."""
-        zipcode_result = geonames_api.get_zipcode_location(
-            username=self.geonames_username,
-            zipcode=zipcode
-        )
-        self.program_data[zipcode] = zipcode_result
-        self.add_zip_code_item(**zipcode_result)
+        worker = Worker(self.geonames_username, zipcode)
+        worker.result_ready.connect(lambda result: self.set_program_data(zipcode, result))
+        worker.result_ready.connect(lambda result: self.add_zip_code_item(**result))
+        worker.doWork()
+
+    def set_program_data(self, zipcode, result):
+        """Set the program data for the zipcode entry."""
+        self.program_data[zipcode] = result
 
     def add_zip_code_item(self, *, zipcode, latitude, longitude, city):
         """Add a ZIP code item to the list."""
