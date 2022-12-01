@@ -48,7 +48,16 @@ def load_username() -> str:
 
 
 class GetZIPCodeAsyncController(QObject):
-    """Send the ZIP code request asynchronously."""
+    """Send the ZIP code request asynchronously.
+
+    Asynchronous requests require the use of a worker object and worker
+    thread. The purpose of this AsyncController is to bundle these two
+    objects together and only expose some signals from the worker. The
+    worker and worker thread do not exist until sendRequest() is called
+    and are destroyed thereafter. This is why the AsyncController has
+    its own signals to use instead of allowing access to the worker's
+    signals.
+    """
     result_ready = pyqtSignal(dict)
 
     def __init__(self, username: str) -> None:
