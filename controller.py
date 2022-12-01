@@ -57,18 +57,10 @@ class MainController:
 
     def send_zip_code_request(self, zipcode: str):
         """Send the ZIP code request via API and update window."""
-        self.main_window.status_bar.showMessage(
-            f"Request to fetch location data ..."
-        )
-        time_start = time.perf_counter()
         self.main_window.repaint()
         zipcode_result = geonames_api.get_zipcode_location(
             username=self.geonames_username,
             zipcode=zipcode
-        )
-        time_end = time.perf_counter()
-        self.main_window.status_bar.showMessage(
-            f"Request completed in {time_end - time_start:.3f} s."
         )
         self.program_data[zipcode] = zipcode_result
         self.add_zip_code_item(**zipcode_result)
