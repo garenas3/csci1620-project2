@@ -15,7 +15,6 @@ class MainController:
         self.main_window = MainWindow()
         self.program_data = programdata.load()
         self.main_window.on_close = lambda: programdata.save(self.program_data)
-        self.worker_thread = QThread()
         self.set_up_signals_and_slots()
 
     def show(self) -> None:
@@ -57,10 +56,16 @@ class MainController:
 
     def send_zip_code_request(self, zipcode: str):
         """Send the ZIP code request via API and update window."""
-        worker = Worker(self.geonames_username, zipcode)
-        worker.result_ready.connect(lambda result: self.set_program_data(zipcode, result))
-        worker.result_ready.connect(lambda result: self.add_zip_code_item(**result))
-        worker.doWork()
+        self.worker_thread = QThread()
+        self.worker = Worker(self.geonames_username, zipcode)
+        self.worker.moveToThread(self.worker_thread)
+        self.worker_thread.started.connect(self.worker.doWork)
+        self.worker.result_ready.connect(self.worker_thread.quit)
+        self.worker.result_ready.connect(self.worker.deleteLater)
+        self.worker.result_ready.connect(lambda result: self.set_program_data(zipcode, result))
+        self.worker.result_ready.connect(lambda result: self.add_zip_code_item(**result))
+        self.worker_thread.finished.connect(self.worker_thread.deleteLater)
+        self.worker_thread.start()
 
     def set_program_data(self, zipcode, result):
         """Set the program data for the zipcode entry."""
