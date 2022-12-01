@@ -82,29 +82,18 @@ class MainController:
         self.main_window.zip_code_list.addTopLevelItem(zip_item)
 
 
-class FetchZipCodeWorker(QObject):
+class Worker(QObject):
     """Fetch the ZIP code info asynchronously."""
     result_ready = pyqtSignal(dict)
-    request_cancelled = pyqtSignal()
-    request_error = pyqtSignal(RuntimeError)
 
     def __init__(self, geonames_username: str, zipcode: str):
         super().__init__()
         self.geonames_username = geonames_username
         self.zipcode = zipcode
 
-    def cancel(self):
-        """Cancel the running operation."""
-        self.terminate()
-        self.wait()
-        self.request_cancelled.emit()
-
-    def run(self):
-        try:
-            result = geonames_api.get_zipcode_location(
-                username=self.geonames_username,
-                zipcode=self.zipcode
-            )
-            self.result_ready.emit(result)
-        except RuntimeError as error:
-            self.request_error.emit(error)
+    def doWork(self):
+        result = geonames_api.get_zipcode_location(
+            username=self.geonames_username,
+            zipcode=self.zipcode
+        )
+        self.result_ready.emit(result)
