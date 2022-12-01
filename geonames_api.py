@@ -17,7 +17,6 @@ def get_zipcode_location(username: str, zipcode: str):
     payload = {                 # maxRows <= 500 uses 2 credits per request
         "postalcode": zipcode,  # ZIP codes are exclusive to US
         "country": "US",        # restrict results to US
-        "radius": 30,           # 30 km is max radius for free accounts
         "maxRows": 1,           # assume first row is correct latitude and longitude
         "username": username    # username should be unique to application
     }
