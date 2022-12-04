@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt
 
 from view import MainWindow
 import geonames_api
-import programdata
+import zip_data
 
 
 class MainController:
@@ -14,8 +14,8 @@ class MainController:
             geonames_api.load_username()
         )
         self.main_window = MainWindow()
-        self.program_data = programdata.load()
-        self.main_window.on_close = lambda: programdata.save(self.program_data)
+        self.program_data = zip_data.load()
+        self.main_window.on_close = lambda: zip_data.save(self.program_data)
         self.set_up_signals_and_slots()
 
     def show(self) -> None:
