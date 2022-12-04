@@ -32,6 +32,12 @@ class MainController:
         self.geonames_controller.result_ready.connect(
             lambda: self.main_window.status_bar.showMessage("Request successful.")
         )
+        self.geonames_controller.error_raised.connect(
+            lambda: self.main_window.status_bar.showMessage("Error occurred while making request.")
+        )
+        self.geonames_controller.error_raised.connect(
+            lambda message: QMessageBox.warning(self.main_window, "Error", message)
+        )
         self.geonames_controller.result_ready.connect(lambda result: self.set_program_data(result))
         self.geonames_controller.result_ready.connect(lambda result: self.add_zip_code_item(**result))
 

@@ -59,6 +59,7 @@ class GetZIPCodeAsyncController(QObject):
     signals.
     """
     result_ready = pyqtSignal(dict)
+    error_raised = pyqtSignal(str)
 
     def __init__(self, username: str) -> None:
         """Initialize the AsyncController.
@@ -97,6 +98,7 @@ class GetZIPCodeAsyncController(QObject):
         self._worker_thread.finished.connect(self._worker_thread.deleteLater)
 
         self._worker.result_ready.connect(self.result_ready)
+        self._worker.error_raised.connect(self.error_raised)
 
         self._worker_thread.start()
 
@@ -104,6 +106,7 @@ class GetZIPCodeAsyncController(QObject):
 class _GetZIPCodeAsyncWorker(QObject):
     """Worker to perform asynchronous ZIP code info retrieval."""
     result_ready = pyqtSignal(dict)
+    error_raised = pyqtSignal(str)
     finished = pyqtSignal()
 
     def __init__(self, geonames_username: str, zipcode: str) -> None:
@@ -112,12 +115,16 @@ class _GetZIPCodeAsyncWorker(QObject):
         self.zipcode = zipcode
 
     def doWork(self) -> None:
-        result = get_zipcode_location(
-            username=self.geonames_username,
-            zipcode=self.zipcode
-        )
-        self.result_ready.emit(result)
-        self.finished.emit()
+        try:
+            result = get_zipcode_location(
+                username=self.geonames_username,
+                zipcode=self.zipcode
+            )
+            self.result_ready.emit(result)
+        except RuntimeError as error:
+            self.error_raised.emit(str(error))
+        finally:
+            self.finished.emit()
 
 
 def main():
