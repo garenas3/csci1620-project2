@@ -23,7 +23,9 @@ def save(data: dict[str, dict[str, Any]],
         return
     try:
         with open(filename, 'w', newline='') as csvfile:
-            writer = csv.DictWriter(csvfile, ["zipcode", "latitude", "longitude", "city"])
+            writer = csv.DictWriter(
+                csvfile, ["zipcode", "latitude", "longitude", "city"]
+            )
             writer.writeheader()
             for zipcode, coords in data.items():
                 writer.writerow(coords)
