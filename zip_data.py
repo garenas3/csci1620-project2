@@ -16,7 +16,7 @@ def load(filename: str = "zip_data.csv") -> dict[str, dict[str, Any]]:
         return {}
 
 
-def save(data: dict[str, str],
+def save(data: dict[str, dict[str, Any]],
          filename: str = "zip_data.csv") -> None:
     """Save the program cache to a file."""
     if not data:
