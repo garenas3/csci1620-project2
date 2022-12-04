@@ -5,9 +5,9 @@ from typing import Any
 def load(filename: str = "zip_data.csv") -> dict[str, dict[str, Any]]:
     """Load the program cache from a file."""
     try:
-        with open(filename, 'r', newline='') as fh:
+        with open(filename, 'r', newline='') as csvfile:
             result = {}
-            reader = csv.DictReader(fh)
+            reader = csv.DictReader(csvfile)
             for row in reader:
                 zipcode = row['zipcode']
                 result[zipcode] = row
@@ -22,8 +22,8 @@ def save(data: dict[str, dict[str, Any]],
     if not data:
         return
     try:
-        with open(filename, 'w', newline='') as fh:
-            writer = csv.DictWriter(fh, ["zipcode", "latitude", "longitude", "city"])
+        with open(filename, 'w', newline='') as csvfile:
+            writer = csv.DictWriter(csvfile, ["zipcode", "latitude", "longitude", "city"])
             writer.writeheader()
             for zipcode, coords in data.items():
                 writer.writerow(coords)
