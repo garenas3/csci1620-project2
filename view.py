@@ -13,6 +13,7 @@ class MainWindow(QMainWindow):
         self.zip_code_edit = QLineEdit()
         self.zip_code_list = QTreeWidget()
         self.search_button = QPushButton("Search")
+        self.next_button = QPushButton("Next")
         self.close_button = QPushButton("Close")
         self.status_bar = self.statusBar()
         self.on_close: Callable[..., Any] | None = None
@@ -36,6 +37,8 @@ class MainWindow(QMainWindow):
         header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.zip_code_list.setHeaderHidden(True)
         buttons_layout = QHBoxLayout()
+        self.next_button.setEnabled(False)
+        buttons_layout.addWidget(self.next_button)
         buttons_layout.addWidget(self.close_button)
         main_layout = QVBoxLayout()
         main_layout.addLayout(zip_search_layout)
