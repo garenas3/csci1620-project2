@@ -22,7 +22,7 @@ class MainWindow(QMainWindow):
 
     def setUpWidgets(self):
         """Set up the widgets in the main window."""
-        central_widget = QWidget()
+        zip_code_search_widget = QWidget()
         zip_search_layout = QHBoxLayout()
         zip_search_layout.addWidget(QLabel("ZIP Code:"))
         self.zip_code_edit.setPlaceholderText("e.g. 00501")
@@ -44,8 +44,8 @@ class MainWindow(QMainWindow):
         main_layout.addLayout(zip_search_layout)
         main_layout.addWidget(self.zip_code_list)
         main_layout.addLayout(buttons_layout)
-        central_widget.setLayout(main_layout)
-        self.setCentralWidget(central_widget)
+        zip_code_search_widget.setLayout(main_layout)
+        self.setCentralWidget(zip_code_search_widget)
         self.zip_code_edit.setStatusTip("Enter 5-digit US ZIP code.")
         self.zip_code_list.setStatusTip("Location data returned for ZIP codes.")
         self.search_button.setStatusTip("Get location data from GeoNames.")
