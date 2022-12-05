@@ -1,9 +1,10 @@
 from typing import Callable, Any
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import (QWidget, QLineEdit, QFormLayout, QHBoxLayout,
                              QVBoxLayout, QPushButton, QTreeWidget,
-                             QHeaderView, QMainWindow, QLabel)
+                             QHeaderView, QMainWindow, QLabel, QSizePolicy)
 
 
 class MainWindow(QMainWindow):
@@ -21,8 +22,15 @@ class MainWindow(QMainWindow):
     def setUpWidgets(self):
         """Set up the widgets in the main window."""
         central_widget = QWidget()
-        form_layout = QFormLayout()
-        form_layout.addRow("ZIP Code:", self.zip_code_edit)
+        zip_search_layout = QHBoxLayout()
+        zip_search_layout.addWidget(QLabel("ZIP Code:"))
+        self.zip_code_edit.setPlaceholderText("e.g. 00501")
+        self.zip_code_edit.setClearButtonEnabled(True)
+        zip_search_layout.addWidget(self.zip_code_edit)
+        size_policy = self.search_button.sizePolicy()
+        size_policy.setHorizontalPolicy(QSizePolicy.Policy.Fixed)
+        self.search_button.setSizePolicy(size_policy)
+        zip_search_layout.addWidget(self.search_button)
         self.zip_code_list.setColumnCount(2)
         header = self.zip_code_list.header()
         header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
@@ -30,15 +38,7 @@ class MainWindow(QMainWindow):
         buttons_layout = QHBoxLayout()
         buttons_layout.addWidget(self.close_button)
         main_layout = QVBoxLayout()
-        instructions = QLabel()
-        instructions.setText(
-            "Enter 5-digit zip code in the text box and click submit "
-            "to fetch latitude and longitude data."
-        )
-        instructions.setWordWrap(True)
-        main_layout.addWidget(instructions)
-        main_layout.addLayout(form_layout)
-        main_layout.addWidget(self.search_button)
+        main_layout.addLayout(zip_search_layout)
         main_layout.addWidget(self.zip_code_list)
         main_layout.addLayout(buttons_layout)
         central_widget.setLayout(main_layout)
