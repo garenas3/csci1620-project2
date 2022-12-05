@@ -1,10 +1,9 @@
 from typing import Callable, Any
 
-from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCloseEvent
-from PyQt5.QtWidgets import (QWidget, QLineEdit, QFormLayout, QHBoxLayout,
-                             QVBoxLayout, QPushButton, QTreeWidget,
-                             QHeaderView, QMainWindow, QLabel, QSizePolicy)
+from PyQt5.QtWidgets import (QWidget, QLineEdit, QHBoxLayout, QVBoxLayout,
+                             QPushButton, QTreeWidget, QHeaderView,
+                             QMainWindow, QLabel, QSizePolicy)
 
 
 class MainWindow(QMainWindow):
