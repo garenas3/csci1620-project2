@@ -25,7 +25,7 @@ class MainController:
     def set_up_signals_and_slots(self) -> None:
         """Set up the signals and slots for the program."""
         self.main_window.close_button.clicked.connect(self.main_window.close)
-        self.main_window.submit_button.clicked.connect(self.submit_zip_code)
+        self.main_window.search_button.clicked.connect(self.submit_zip_code)
         self.main_window.zip_code_edit.returnPressed.connect(
             self.submit_zip_code
         )

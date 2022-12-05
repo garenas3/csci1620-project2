@@ -11,7 +11,7 @@ class MainWindow(QMainWindow):
         super().__init__(*args, **kwargs)
         self.zip_code_edit = QLineEdit()
         self.zip_code_list = QTreeWidget()
-        self.submit_button = QPushButton("Submit")
+        self.search_button = QPushButton("Search")
         self.close_button = QPushButton("Close")
         self.status_bar = self.statusBar()
         self.on_close: Callable[..., Any] | None = None
@@ -28,7 +28,7 @@ class MainWindow(QMainWindow):
         header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.zip_code_list.setHeaderHidden(True)
         buttons_layout = QHBoxLayout()
-        buttons_layout.addWidget(self.submit_button)
+        buttons_layout.addWidget(self.search_button)
         buttons_layout.addWidget(self.close_button)
         main_layout = QVBoxLayout()
         instructions = QLabel()
@@ -45,9 +45,9 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
         self.zip_code_edit.setStatusTip("Enter 5-digit US ZIP code.")
         self.zip_code_list.setStatusTip("Location data returned for ZIP codes.")
-        self.submit_button.setStatusTip("Get location data from GeoNames.")
+        self.search_button.setStatusTip("Get location data from GeoNames.")
         self.close_button.setStatusTip("Close the program.")
-        self.submit_button.setDefault(True)
+        self.search_button.setDefault(True)
 
     def closeEvent(self, event: QCloseEvent) -> None:
         if self.on_close:
