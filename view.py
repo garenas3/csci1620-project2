@@ -21,6 +21,11 @@ class MainWindow(QMainWindow):
 
     def setUpWidgets(self):
         """Set up the widgets in the main window."""
+        zip_code_search_widget = self.setUpZipCodeSearchWidget()
+        self.setCentralWidget(zip_code_search_widget)
+
+    def setUpZipCodeSearchWidget(self) -> QWidget:
+        """Set up the ZIP code search widget."""
         zip_code_search_widget = QWidget()
         zip_search_layout = QHBoxLayout()
         zip_search_layout.addWidget(QLabel("ZIP Code:"))
@@ -44,13 +49,13 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(self.zip_code_list)
         main_layout.addLayout(buttons_layout)
         zip_code_search_widget.setLayout(main_layout)
-        self.setCentralWidget(zip_code_search_widget)
         self.zip_code_edit.setStatusTip("Enter 5-digit US ZIP code.")
         self.zip_code_list.setStatusTip("Location data returned for ZIP codes.")
         self.search_button.setStatusTip("Get location data from GeoNames.")
         self.next_button.setStatusTip("Go to the next screen.")
         self.close_button.setStatusTip("Close the program.")
         self.search_button.setDefault(True)
+        return zip_code_search_widget
 
     def closeEvent(self, event: QCloseEvent) -> None:
         if self.on_close:
