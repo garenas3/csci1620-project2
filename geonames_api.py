@@ -32,7 +32,10 @@ def get_zipcode_location(username: str, zipcode: str) -> dict[str, Any]:
                 raise RuntimeError(f"GeoNames Webservice Exception ({error_code}): {error_message}")
             else:
                 r.raise_for_status()
-        result = response["postalCodes"][0]
+        try:
+            result = response["postalCodes"][0]
+        except IndexError as error:
+            raise RuntimeError(f"ZIP code not found: {zipcode}")
         return {"zipcode": zipcode,
                 "latitude": result["lat"],
                 "longitude": result["lng"],
