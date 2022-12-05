@@ -40,6 +40,11 @@ class MainController:
         )
         self.geonames_controller.result_ready.connect(lambda result: self.set_program_data(result))
         self.geonames_controller.result_ready.connect(lambda result: self.add_zip_code_item(**result))
+        self.main_window.zip_code_list.itemSelectionChanged.connect(
+            lambda: self.main_window.next_button.setEnabled(
+                bool(self.main_window.zip_code_list.selectedItems())
+            )
+        )
 
     def submit_zip_code(self) -> None:
         """Submit the ZIP code displayed in the ZIP code line edit."""
