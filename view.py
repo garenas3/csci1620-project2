@@ -1,7 +1,7 @@
 from typing import Callable, Any
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QCloseEvent
+from PyQt5.QtGui import QCloseEvent, QFont
 from PyQt5.QtWidgets import (QWidget, QLineEdit, QHBoxLayout, QVBoxLayout,
                              QPushButton, QTreeWidget, QHeaderView,
                              QMainWindow, QLabel, QSizePolicy, QStackedLayout, QSlider, QSpinBox)
@@ -45,6 +45,10 @@ class ZipCodeSearchWidget(QWidget):
 
     def setUpWidget(self):
         """Set up the ZIP code search widget."""
+        search_heading = QLabel("Search for Location")
+        search_heading_font = QFont()
+        search_heading_font.setPointSize(16)
+        search_heading.setFont(search_heading_font)
         zip_search_layout = QHBoxLayout()
         zip_search_layout.addWidget(QLabel("ZIP Code:"))
         self.zip_code_edit.setPlaceholderText("e.g. 00501")
@@ -59,6 +63,8 @@ class ZipCodeSearchWidget(QWidget):
         header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.zip_code_list.setHeaderHidden(True)
         main_layout = QVBoxLayout()
+        main_layout.addWidget(search_heading)
+        main_layout.addSpacing(10)
         main_layout.addLayout(zip_search_layout)
         main_layout.addWidget(self.zip_code_list)
         buttons_layout = QHBoxLayout()
@@ -119,11 +125,17 @@ class SelectWeatherStationWidget(QWidget):
 
     def setUpWidget(self):
         """Set up the select weather station widget."""
+        select_heading = QLabel("Select a Weather Station")
+        select_heading_font = QFont()
+        select_heading_font.setPointSize(16)
+        select_heading.setFont(select_heading_font)
         self.station_list.setColumnCount(2)
         header = self.station_list.header()
         header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.station_list.setHeaderHidden(True)
         main_layout = QVBoxLayout()
+        main_layout.addWidget(select_heading)
+        main_layout.addSpacing(10)
         main_layout.addWidget(self.search_radius)
         main_layout.addWidget(self.station_list)
         buttons_layout = QHBoxLayout()
