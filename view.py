@@ -1,9 +1,10 @@
 from typing import Callable, Any
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import (QWidget, QLineEdit, QHBoxLayout, QVBoxLayout,
                              QPushButton, QTreeWidget, QHeaderView,
-                             QMainWindow, QLabel, QSizePolicy, QStackedLayout)
+                             QMainWindow, QLabel, QSizePolicy, QStackedLayout, QSlider, QSpinBox)
 
 
 class MainWindow(QMainWindow):
@@ -75,9 +76,40 @@ class ZipCodeSearchWidget(QWidget):
         self.search_button.setDefault(True)
 
 
+class SearchRadiusWidget(QWidget):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.slider = QSlider(Qt.Orientation.Horizontal)
+        self.spin_box = QSpinBox()
+        self.setUpWidgets()
+
+    def setUpWidgets(self):
+        """Set up widgets for the search radius widget."""
+        main_layout = QHBoxLayout()
+        main_layout.addWidget(QLabel("Search Radius:"))
+        main_layout.addWidget(self.slider)
+        main_layout.addWidget(self.spin_box)
+        self.spin_box.setSuffix(" miles")
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(main_layout)
+        self.slider.setStatusTip("Set the search radius.")
+        self.slider.valueChanged.connect(self.spin_box.setValue)
+        self.spin_box.valueChanged.connect(self.slider.setValue)
+
+    def setMinimum(self, value):
+        self.slider.setMinimum(value)
+        self.spin_box.setMinimum(value)
+
+    def setMaximum(self, value):
+        self.slider.setMaximum(value)
+        self.spin_box.setMaximum(value)
+
+
+
 class SelectWeatherStationWidget(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.search_radius = SearchRadiusWidget()
         self.station_list = QTreeWidget()
         self.next_button = QPushButton("Next")
         self.go_back_button = QPushButton("Go Back")
@@ -92,6 +124,7 @@ class SelectWeatherStationWidget(QWidget):
         header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.station_list.setHeaderHidden(True)
         main_layout = QVBoxLayout()
+        main_layout.addWidget(self.search_radius)
         main_layout.addWidget(self.station_list)
         buttons_layout = QHBoxLayout()
         self.next_button.setEnabled(False)
