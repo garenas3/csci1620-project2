@@ -24,6 +24,7 @@ class MainController:
         self.main_window = MainWindow()
         self.zip_code_search_page = self.main_window.zip_code_search_widget
         self.select_weather_station_page = self.main_window.select_weather_station_widget
+        self.frost_dates_page = self.main_window.frost_dates_widget
         self.zip_data = zip_data.load()
         self.main_window.on_close = lambda: zip_data.save(self.zip_data)
         self.set_up_signals_and_slots()
@@ -83,6 +84,21 @@ class MainController:
         )
         self.select_weather_station_page.station_list.itemSelectionChanged.connect(
             self.set_current_station_id
+        )
+        self.select_weather_station_page.next_button.clicked.connect(
+            lambda: self.main_window.stacked_layout.setCurrentIndex(2)
+        )
+        self.frost_dates_page.restart_button.clicked.connect(
+            lambda: self.zip_code_search_page.zip_code_edit.clear()
+        )
+        self.frost_dates_page.restart_button.clicked.connect(
+            lambda: self.zip_code_search_page.zip_code_list.clear()
+        )
+        self.frost_dates_page.restart_button.clicked.connect(
+            lambda: self.main_window.stacked_layout.setCurrentIndex(0)
+        )
+        self.frost_dates_page.close_button.clicked.connect(
+            self.main_window.close
         )
 
     def submit_zip_code(self) -> None:

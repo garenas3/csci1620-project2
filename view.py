@@ -4,7 +4,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCloseEvent, QFont
 from PyQt5.QtWidgets import (QWidget, QLineEdit, QHBoxLayout, QVBoxLayout,
                              QPushButton, QTreeWidget, QHeaderView,
-                             QMainWindow, QLabel, QSizePolicy, QStackedLayout, QSlider, QSpinBox)
+                             QMainWindow, QLabel, QSizePolicy, QStackedLayout, QSlider, QSpinBox, QTableWidget)
 
 
 class MainWindow(QMainWindow):
@@ -12,6 +12,7 @@ class MainWindow(QMainWindow):
         super().__init__(*args, **kwargs)
         self.zip_code_search_widget = ZipCodeSearchPage()
         self.select_weather_station_widget = SelectWeatherStationPage()
+        self.frost_dates_widget = FrostDatesPage()
         self.stacked_layout = QStackedLayout()
         self.status_bar = self.statusBar()
         self.on_close: Callable[..., Any] | None = None
@@ -23,6 +24,7 @@ class MainWindow(QMainWindow):
         central_widget = QWidget()
         self.stacked_layout.addWidget(self.zip_code_search_widget)
         self.stacked_layout.addWidget(self.select_weather_station_widget)
+        self.stacked_layout.addWidget(self.frost_dates_widget)
         central_widget.setLayout(self.stacked_layout)
         self.setCentralWidget(central_widget)
 
@@ -160,3 +162,32 @@ class SearchRadiusWidget(QWidget):
 
     def value(self) -> int:
         return self.spin_box.value()
+
+
+class FrostDatesPage(QWidget):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.frost_dates_table = QTableWidget()
+        self.restart_button = QPushButton("Restart")
+        self.close_button = QPushButton("Close")
+        self.setWindowTitle("Frost Dates")
+        self.setUpWidget()
+
+    def setUpWidget(self):
+        """Set up the select weather station widget."""
+        frost_dates_heading = QLabel("Frost Dates")
+        frost_dates_heading_font = QFont()
+        frost_dates_heading_font.setPointSize(16)
+        frost_dates_heading.setFont(frost_dates_heading_font)
+        main_layout = QVBoxLayout()
+        main_layout.addWidget(frost_dates_heading)
+        main_layout.addSpacing(10)
+        main_layout.addWidget(self.frost_dates_table)
+        buttons_layout = QHBoxLayout()
+        buttons_layout.addStretch(1)
+        buttons_layout.addWidget(self.restart_button)
+        buttons_layout.addWidget(self.close_button)
+        main_layout.addLayout(buttons_layout)
+        self.setLayout(main_layout)
+        self.restart_button.setStatusTip("Restart from the beginning.")
+        self.close_button.setStatusTip("Close the program.")
