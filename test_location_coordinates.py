@@ -25,10 +25,11 @@ def test_googleapi_latlngbounds_urlvalue(coords):
         coords.googleapi_latlngbounds_urlvalue(5, "na")
 
 
-def test_distance_from(coords):
-    other = LocationCoordinates(latitude="42.8142432",
-                                longitude="-73.9395687")
-    assert coords.distance_from(other, 'miles') == pytest.approx(8534.43, abs=1e-3)
-    assert coords.distance_from(other, 'km') == pytest.approx(22092.3, abs=1e-2)
+def test_distance_from():
+    origin = LocationCoordinates(latitude="41.318581",
+                                 longitude="-96.346288")
+    other = LocationCoordinates(latitude="41.55361",
+                                longitude="-96.14056")
+    assert origin.distance_from(other, 'miles') == pytest.approx(21.512, abs=1e-3)
     with pytest.raises(ValueError):
         coords.distance_from(other, 'na')
