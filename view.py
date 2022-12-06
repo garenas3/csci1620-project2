@@ -81,35 +81,6 @@ class ZipCodeSearchPage(QWidget):
         self.close_button.setStatusTip("Close the program.")
 
 
-class SearchRadiusWidget(QWidget):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.slider = QSlider(Qt.Orientation.Horizontal)
-        self.spin_box = QSpinBox()
-        self.setUpWidgets()
-
-    def setUpWidgets(self):
-        """Set up widgets for the search radius widget."""
-        main_layout = QHBoxLayout()
-        main_layout.addWidget(QLabel("Search Radius:"))
-        main_layout.addWidget(self.slider)
-        main_layout.addWidget(self.spin_box)
-        self.spin_box.setSuffix(" miles")
-        main_layout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(main_layout)
-        self.slider.setStatusTip("Set the search radius.")
-        self.slider.valueChanged.connect(self.spin_box.setValue)
-        self.spin_box.valueChanged.connect(self.slider.setValue)
-
-    def setMinimum(self, value):
-        self.slider.setMinimum(value)
-        self.spin_box.setMinimum(value)
-
-    def setMaximum(self, value):
-        self.slider.setMaximum(value)
-        self.spin_box.setMaximum(value)
-
-
 class SelectWeatherStationPage(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -152,3 +123,32 @@ class SelectWeatherStationPage(QWidget):
         self.go_back_button.setStatusTip("Go to the previous screen.")
         self.next_button.setStatusTip("Go to the next screen.")
         self.close_button.setStatusTip("Close the program.")
+
+
+class SearchRadiusWidget(QWidget):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.slider = QSlider(Qt.Orientation.Horizontal)
+        self.spin_box = QSpinBox()
+        self.setUpWidgets()
+
+    def setUpWidgets(self):
+        """Set up widgets for the search radius widget."""
+        main_layout = QHBoxLayout()
+        main_layout.addWidget(QLabel("Search Radius:"))
+        main_layout.addWidget(self.slider)
+        main_layout.addWidget(self.spin_box)
+        self.spin_box.setSuffix(" miles")
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(main_layout)
+        self.slider.setStatusTip("Set the search radius.")
+        self.slider.valueChanged.connect(self.spin_box.setValue)
+        self.spin_box.valueChanged.connect(self.slider.setValue)
+
+    def setMinimum(self, value):
+        self.slider.setMinimum(value)
+        self.spin_box.setMinimum(value)
+
+    def setMaximum(self, value):
+        self.slider.setMaximum(value)
+        self.spin_box.setMaximum(value)
