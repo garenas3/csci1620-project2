@@ -77,7 +77,7 @@ class LocationCoordinates:
         """
         east_west_distance = from_meridians(other.longitude - self.longitude, unit)
         north_south_distance = from_parallels(other.latitude - self.latitude, unit)
-        return math.sqrt((east_west_distance ** 2) * (north_south_distance ** 2))
+        return math.sqrt((east_west_distance ** 2) + (north_south_distance ** 2))
 
 
 def latitude_compass_direction(latitude):
