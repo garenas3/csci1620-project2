@@ -125,7 +125,7 @@ class MainController:
     def set_current_location(self):
         """Set the current location to the selected ZIP code."""
         selected = self.zip_code_search_page.zip_code_list.selectedItems()[0]
-        if selected.parent() is QTreeWidgetItem:
+        if isinstance(selected.parent(), QTreeWidgetItem):
             selected = selected.parent()
         zip_code = selected.text(0)
         self.current_location = LocationCoordinates(
