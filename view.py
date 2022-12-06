@@ -22,21 +22,10 @@ class MainWindow(QMainWindow):
     def setUpWidgets(self):
         """Set up the widgets in the main window."""
         central_widget = QWidget()
-        buttons_layout = QHBoxLayout()
-        self.next_button.setEnabled(False)
-        buttons_layout.addWidget(self.next_button)
-        buttons_layout.addWidget(self.close_button)
         stacked_layout = QStackedLayout()
         stacked_layout.addWidget(self.setUpZipCodeSearchWidget())
         stacked_layout.addWidget(self.setUpSelectStationWidget())
-        self.next_button.clicked.connect(lambda: stacked_layout.setCurrentIndex(1))
-        self.next_button.clicked.connect(lambda: self.next_button.setEnabled(False))
-        self.next_button.setStatusTip("Go to the next screen.")
-        self.close_button.setStatusTip("Close the program.")
-        main_layout = QVBoxLayout()
-        main_layout.addLayout(stacked_layout)
-        main_layout.addLayout(buttons_layout)
-        central_widget.setLayout(main_layout)
+        central_widget.setLayout(stacked_layout)
         self.setCentralWidget(central_widget)
 
     def setUpZipCodeSearchWidget(self) -> QWidget:
@@ -58,10 +47,17 @@ class MainWindow(QMainWindow):
         main_layout = QVBoxLayout()
         main_layout.addLayout(zip_search_layout)
         main_layout.addWidget(self.zip_code_list)
+        buttons_layout = QHBoxLayout()
+        self.next_button.setEnabled(False)
+        buttons_layout.addWidget(self.next_button)
+        buttons_layout.addWidget(self.close_button)
+        main_layout.addLayout(buttons_layout)
         zip_code_search_widget.setLayout(main_layout)
         self.zip_code_edit.setStatusTip("Enter 5-digit US ZIP code.")
         self.zip_code_list.setStatusTip("Location data returned for ZIP codes.")
         self.search_button.setStatusTip("Get location data from GeoNames.")
+        self.next_button.setStatusTip("Go to the next screen.")
+        self.close_button.setStatusTip("Close the program.")
         self.search_button.setDefault(True)
         return zip_code_search_widget
 
