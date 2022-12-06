@@ -74,6 +74,9 @@ class MainController:
                 bool(self.select_weather_station_page.station_list.selectedItems())
             )
         )
+        self.zip_code_search_page.next_button.clicked.connect(
+            self.set_current_location
+        )
 
     def submit_zip_code(self) -> None:
         """Submit the ZIP code displayed in the ZIP code line edit."""
@@ -115,6 +118,17 @@ class MainController:
         self.zip_code_search_page.zip_code_list.addTopLevelItem(zip_item)
         zip_item.setFirstColumnSpanned(True)
         zip_item.setExpanded(True)
+
+    def set_current_location(self):
+        """Set the current location to the selected ZIP code."""
+        selected = self.zip_code_search_page.zip_code_list.selectedItems()[0]
+        if selected.parent() is QTreeWidgetItem:
+            selected = selected.parent()
+        zip_code = selected.text(0)
+        self.current_location = LocationCoordinates(
+            latitude=self.program_data[zip_code]["latitude"],
+            longitude=self.program_data[zip_code]["longitude"]
+        )
 
     def search_weather_stations(self):
         radius = self.select_weather_station_page.search_radius.value()
