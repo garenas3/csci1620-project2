@@ -10,8 +10,8 @@ from PyQt5.QtWidgets import (QWidget, QLineEdit, QHBoxLayout, QVBoxLayout,
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.zip_code_search_widget = ZipCodeSearchWidget()
-        self.select_weather_station_widget = SelectWeatherStationWidget()
+        self.zip_code_search_widget = ZipCodeSearchPage()
+        self.select_weather_station_widget = SelectWeatherStationPage()
         self.stacked_layout = QStackedLayout()
         self.status_bar = self.statusBar()
         self.on_close: Callable[..., Any] | None = None
@@ -32,7 +32,7 @@ class MainWindow(QMainWindow):
         event.accept()
 
 
-class ZipCodeSearchWidget(QWidget):
+class ZipCodeSearchPage(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.zip_code_edit = QLineEdit()
@@ -111,8 +111,7 @@ class SearchRadiusWidget(QWidget):
         self.spin_box.setMaximum(value)
 
 
-
-class SelectWeatherStationWidget(QWidget):
+class SelectWeatherStationPage(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.search_radius = SearchRadiusWidget()

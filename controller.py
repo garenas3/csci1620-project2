@@ -3,7 +3,7 @@ import re
 from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox
 from PyQt5.QtCore import Qt
 
-from view import MainWindow, ZipCodeSearchWidget
+from view import MainWindow, ZipCodeSearchPage
 import geonames_api
 import zip_data
 
