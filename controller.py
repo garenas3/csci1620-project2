@@ -53,6 +53,9 @@ class MainController:
         self.select_weather_station_widget.go_back_button.clicked.connect(
             lambda: self.main_window.stacked_layout.setCurrentIndex(0)
         )
+        self.select_weather_station_widget.close_button.clicked.connect(
+            self.main_window.close
+        )
 
     def submit_zip_code(self) -> None:
         """Submit the ZIP code displayed in the ZIP code line edit."""
