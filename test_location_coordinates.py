@@ -32,4 +32,4 @@ def test_distance_from():
                                 longitude="-96.14056")
     assert origin.distance_from(other, 'miles') == pytest.approx(21.576, abs=1e-3)
     with pytest.raises(ValueError):
-        coords.distance_from(other, 'na')
+        origin.distance_from(other, 'na')
