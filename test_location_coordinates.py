@@ -30,6 +30,6 @@ def test_distance_from():
                                  longitude="-96.346288")
     other = LocationCoordinates(latitude="41.55361",
                                 longitude="-96.14056")
-    assert origin.distance_from(other, 'miles') == pytest.approx(21.512, abs=1e-3)
+    assert origin.distance_from(other, 'miles') == pytest.approx(21.576, abs=1e-3)
     with pytest.raises(ValueError):
         coords.distance_from(other, 'na')
