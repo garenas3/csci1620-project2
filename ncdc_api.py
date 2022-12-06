@@ -40,6 +40,31 @@ def get_nearby_stations(token: str, location: LocationCoordinates,
         raise RuntimeError('Unable to parse JSON')
 
 
+def get_frost_dates(token: str, station_id: str):
+    """Retrieve a list of nearby stations.
+
+    https://www.ncdc.noaa.gov/cdo-web/webservices/v2
+
+    Args:
+        token: The NCDC web service token used to retrieve the data.
+        station_id: The station ID to fetch from.
+    Returns:
+        A list of stations near the given search coordinates sorted from nearest to farthest.
+    """
+    payload = {
+        'datasetid': 'NORMAL_ANN',  # Normals Annual/Seasonal
+        'startdate': '2010-01-01',
+        'enddate': '2010-01-01'
+    }
+    r = requests.get('https://www.ncei.noaa.gov/cdo-web/api/v2/data',
+                     params=payload, headers={'token': token})
+    try:
+        response = r.json()
+        return response
+    except requests.exceptions.JSONDecodeError:
+        raise RuntimeError('Unable to parse JSON')
+
+
 @dataclass
 class StationInfo:
     id: str
@@ -137,6 +162,7 @@ class _GetNearbyStationsAsyncWorker(QObject):
 
 def main():
     token = load_token()
+    get_frost_dates(token, "GHCND:USC00258795")
     location = LocationCoordinates(latitude="41.318581", longitude="-96.346288")
     stations = get_nearby_stations(token, location, 15, "miles")
     for station in stations:
