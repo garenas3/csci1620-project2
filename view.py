@@ -31,6 +31,8 @@ class MainWindow(QMainWindow):
         stacked_layout.addWidget(self.setUpSelectStationWidget())
         self.next_button.clicked.connect(lambda: stacked_layout.setCurrentIndex(1))
         self.next_button.clicked.connect(lambda: self.next_button.setEnabled(False))
+        self.next_button.setStatusTip("Go to the next screen.")
+        self.close_button.setStatusTip("Close the program.")
         main_layout = QVBoxLayout()
         main_layout.addLayout(stacked_layout)
         main_layout.addLayout(buttons_layout)
@@ -60,8 +62,6 @@ class MainWindow(QMainWindow):
         self.zip_code_edit.setStatusTip("Enter 5-digit US ZIP code.")
         self.zip_code_list.setStatusTip("Location data returned for ZIP codes.")
         self.search_button.setStatusTip("Get location data from GeoNames.")
-        self.next_button.setStatusTip("Go to the next screen.")
-        self.close_button.setStatusTip("Close the program.")
         self.search_button.setDefault(True)
         return zip_code_search_widget
 
