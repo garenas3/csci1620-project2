@@ -77,6 +77,9 @@ class MainController:
         self.zip_code_search_page.next_button.clicked.connect(
             self.set_current_location
         )
+        self.zip_code_search_page.next_button.clicked.connect(
+            self.select_weather_station_page.station_list.clear
+        )
 
     def submit_zip_code(self) -> None:
         """Submit the ZIP code displayed in the ZIP code line edit."""
