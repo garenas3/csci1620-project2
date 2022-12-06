@@ -20,6 +20,7 @@ class MainController:
             ncdc_api.load_token()
         )
         self.current_location = LocationCoordinates(latitude="41.318581", longitude="-96.346288")
+        self.current_station_id: str = ''
         self.main_window = MainWindow()
         self.zip_code_search_page = self.main_window.zip_code_search_widget
         self.select_weather_station_page = self.main_window.select_weather_station_widget
@@ -79,6 +80,9 @@ class MainController:
         )
         self.zip_code_search_page.next_button.clicked.connect(
             self.select_weather_station_page.station_list.clear
+        )
+        self.select_weather_station_page.station_list.itemSelectionChanged.connect(
+            self.set_current_station_id
         )
 
     def submit_zip_code(self) -> None:
@@ -151,3 +155,15 @@ class MainController:
             QTreeWidgetItem(item, ["Distance:", f"{distance:.1f} miles"])
             self.select_weather_station_page.station_list.addTopLevelItem(item)
             item.setFirstColumnSpanned(True)
+
+    def set_current_station_id(self):
+        """Set the current station ID to the selected station."""
+        items = self.select_weather_station_page.station_list.selectedItems()
+        if not items:
+            self.current_station_id = ''
+            return
+        selected = items[0]
+        if isinstance(selected.parent(), QTreeWidgetItem):
+            selected = selected.parent()
+        station_id = selected.child(0).text(1)
+        self.current_station_id = station_id
