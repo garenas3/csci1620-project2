@@ -58,6 +58,9 @@ class MainController:
         self.select_weather_station_page.close_button.clicked.connect(
             self.main_window.close
         )
+        self.select_weather_station_page.search_button.clicked.connect(
+            self.search_weather_stations
+        )
 
     def submit_zip_code(self) -> None:
         """Submit the ZIP code displayed in the ZIP code line edit."""
@@ -98,3 +101,6 @@ class MainController:
         QTreeWidgetItem(zip_item, ["City:", city])
         self.zip_code_search_page.zip_code_list.addTopLevelItem(zip_item)
         zip_item.setExpanded(True)
+
+    def search_weather_stations(self):
+        pass
