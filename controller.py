@@ -144,7 +144,6 @@ class MainController:
         stations.sort(key=lambda s: self.current_location.distance_from(s.location, 'miles'))
         for station in stations:
             item = QTreeWidgetItem(None, [station.name])
-            item.setToolTip(0, station.name)
             QTreeWidgetItem(item, ["Latitude:", str(station.location.latitude)])
             QTreeWidgetItem(item, ["Longitude:", str(station.location.longitude)])
             distance = self.current_location.distance_from(station.location, 'miles')
