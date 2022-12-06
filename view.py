@@ -145,7 +145,7 @@ class SelectWeatherStationPage(QWidget):
         buttons_layout.addWidget(self.close_button)
         main_layout.addLayout(buttons_layout)
         self.setLayout(main_layout)
-        self.station_list.setStatusTip("Select a weather station from the list.")
+        self.station_list.setStatusTip("Select a weather station.")
         self.go_back_button.setStatusTip("Go to the previous screen.")
         self.next_button.setStatusTip("Go to the next screen.")
         self.close_button.setStatusTip("Close the program.")
