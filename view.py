@@ -115,6 +115,7 @@ class SelectWeatherStationPage(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.search_radius = SearchRadiusWidget()
+        self.search_button = QPushButton("Search")
         self.station_list = QTreeWidget()
         self.next_button = QPushButton("Next")
         self.go_back_button = QPushButton("Go Back")
@@ -138,6 +139,7 @@ class SelectWeatherStationPage(QWidget):
         self.search_radius.setMinimum(5)
         self.search_radius.setMaximum(20)
         main_layout.addWidget(self.search_radius)
+        main_layout.addWidget(self.search_button, alignment=Qt.AlignmentFlag.AlignRight)
         main_layout.addWidget(self.station_list)
         buttons_layout = QHBoxLayout()
         self.next_button.setEnabled(False)
