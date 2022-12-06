@@ -79,7 +79,6 @@ class ZipCodeSearchPage(QWidget):
         self.search_button.setStatusTip("Get location data from GeoNames.")
         self.next_button.setStatusTip("Go to the next screen.")
         self.close_button.setStatusTip("Close the program.")
-        self.search_button.setDefault(True)
 
 
 class SearchRadiusWidget(QWidget):
