@@ -1,7 +1,7 @@
 import re
 from typing import Any
 
-from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox
+from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox, QWidget
 from PyQt5.QtCore import Qt
 
 from view import MainWindow, ZipCodeSearchPage

@@ -4,7 +4,8 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCloseEvent, QFont
 from PyQt5.QtWidgets import (QWidget, QLineEdit, QHBoxLayout, QVBoxLayout,
                              QPushButton, QTreeWidget, QHeaderView,
-                             QMainWindow, QLabel, QSizePolicy, QStackedLayout, QSlider, QSpinBox, QTableWidget)
+                             QMainWindow, QLabel, QSizePolicy, QStackedLayout, QSlider, QSpinBox, QTableWidget,
+                             QTableWidgetItem, QAbstractScrollArea)
 
 
 class MainWindow(QMainWindow):
@@ -167,7 +168,8 @@ class SearchRadiusWidget(QWidget):
 class FrostDatesPage(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.frost_dates_table = QTableWidget()
+        self.fall_frost_dates_table = FrostDatesTable()
+        self.spring_frost_dates_table = FrostDatesTable()
         self.restart_button = QPushButton("Restart")
         self.close_button = QPushButton("Close")
         self.setWindowTitle("Frost Dates")
@@ -179,10 +181,23 @@ class FrostDatesPage(QWidget):
         frost_dates_heading_font = QFont()
         frost_dates_heading_font.setPointSize(16)
         frost_dates_heading.setFont(frost_dates_heading_font)
+        self.fall_frost_dates_table.setUpTable("First")
+        self.spring_frost_dates_table.setUpTable("Last")
         main_layout = QVBoxLayout()
         main_layout.addWidget(frost_dates_heading)
         main_layout.addSpacing(10)
-        main_layout.addWidget(self.frost_dates_table)
+        fall_label = QLabel("In the Fall")
+        table_heading_font = QFont()
+        table_heading_font.setPointSize(12)
+        fall_label.setFont(table_heading_font)
+        main_layout.addWidget(fall_label)
+        main_layout.addWidget(self.fall_frost_dates_table)
+        main_layout.addSpacing(10)
+        main_layout.addStretch(1)
+        spring_label = QLabel("In the Spring")
+        spring_label.setFont(table_heading_font)
+        main_layout.addWidget(spring_label)
+        main_layout.addWidget(self.spring_frost_dates_table)
         buttons_layout = QHBoxLayout()
         buttons_layout.addStretch(1)
         buttons_layout.addWidget(self.restart_button)
@@ -191,3 +206,29 @@ class FrostDatesPage(QWidget):
         self.setLayout(main_layout)
         self.restart_button.setStatusTip("Restart from the beginning.")
         self.close_button.setStatusTip("Close the program.")
+
+
+class FrostDatesTable(QTableWidget):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def setUpTable(self, label: str):
+        """Set up the table."""
+        self.setColumnCount(10)
+        self.setHorizontalHeaderLabels(
+            ["Temperature", "10%", "20%", "30%", "40%", "50%", "60%", "70%",
+             "80%", "90%"]
+        )
+        self.setRowCount(6)
+        temperatures = [f"{label} {t} ℉" for t in range(16, 37, 4)]
+        for row, temperature in enumerate(temperatures):
+            item = QTableWidgetItem(temperature)
+            self.setItem(row, 0, item)
+        header = self.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
+        header = self.verticalHeader()
+        header.hide()
+        header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+
