@@ -156,3 +156,6 @@ class SearchRadiusWidget(QWidget):
 
     def setValue(self, value):
         self.spin_box.setValue(value)
+
+    def value(self) -> int:
+        return self.spin_box.value()
