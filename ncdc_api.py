@@ -1,4 +1,5 @@
 from typing import Literal
+from dataclasses import dataclass
 
 import requests
 from PyQt5.QtCore import QThread, QObject, pyqtSignal
@@ -27,10 +28,23 @@ def get_nearby_stations(token: str, location: LocationCoordinates,
                      params=payload, headers={'token': token})
     try:
         response = r.json()
-        stations = response['results']
+        stations = [
+            StationInfo(
+                station['id'], station['name'],
+                LocationCoordinates(latitude=station['latitude'],
+                                    longitude=station['longitude'])
+            ) for station in response['results']
+        ]
         return stations
     except requests.exceptions.JSONDecodeError:
         raise RuntimeError('Unable to parse JSON')
+
+
+@dataclass
+class StationInfo:
+    id: str
+    name: str
+    location: LocationCoordinates
 
 
 def load_token() -> str:
