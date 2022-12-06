@@ -45,7 +45,7 @@ class ZipCodeSearchPage(QWidget):
 
     def setUpWidget(self):
         """Set up the ZIP code search widget."""
-        search_heading = QLabel("Search for Location")
+        search_heading = QLabel("Select a Location")
         search_heading_font = QFont()
         search_heading_font.setPointSize(16)
         search_heading.setFont(search_heading_font)
@@ -135,6 +135,8 @@ class SelectWeatherStationPage(QWidget):
         main_layout = QVBoxLayout()
         main_layout.addWidget(select_heading)
         main_layout.addSpacing(10)
+        self.search_radius.setMinimum(5)
+        self.search_radius.setMaximum(20)
         main_layout.addWidget(self.search_radius)
         main_layout.addWidget(self.station_list)
         buttons_layout = QHBoxLayout()
