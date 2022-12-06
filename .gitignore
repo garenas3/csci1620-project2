@@ -233,6 +233,7 @@ fabric.properties
 
 # Ignore any API info
 geonames.txt
+ncdc.txt
 
 # Additional program files to ignore
 zip_data.csv
