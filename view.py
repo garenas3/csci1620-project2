@@ -65,9 +65,13 @@ class MainWindow(QMainWindow):
         self.search_button.setDefault(True)
         return zip_code_search_widget
 
-    def setUpSelectStationWidget(self) -> QWidget:
+    def setUpSelectStationWidget(self) -> QTreeWidget:
         """Set up the select station widget."""
-        select_station_widget = QWidget()
+        select_station_widget = QTreeWidget()
+        select_station_widget.setColumnCount(2)
+        header = select_station_widget.header()
+        header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        select_station_widget.setHeaderHidden(True)
         return select_station_widget
 
     def closeEvent(self, event: QCloseEvent) -> None:
