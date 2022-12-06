@@ -6,6 +6,7 @@ from PyQt5.QtCore import Qt
 from view import MainWindow, ZipCodeSearchPage
 import geonames_api
 import zip_data
+from location_coordinates import LocationCoordinates
 
 
 class MainController:
@@ -13,6 +14,7 @@ class MainController:
         self.geonames_controller = geonames_api.GetZIPCodeAsyncController(
             geonames_api.load_username()
         )
+        self.current_location = LocationCoordinates(latitude="41.318581", longitude="-96.346288")
         self.main_window = MainWindow()
         self.zip_code_search_page = self.main_window.zip_code_search_widget
         self.select_weather_station_page = self.main_window.select_weather_station_widget
