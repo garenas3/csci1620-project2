@@ -15,6 +15,7 @@ class MainController:
         )
         self.main_window = MainWindow()
         self.zip_code_search_widget = self.main_window.zip_code_search_widget
+        self.select_weather_station_widget = self.main_window.select_weather_station_widget
         self.program_data = zip_data.load()
         self.main_window.on_close = lambda: zip_data.save(self.program_data)
         self.set_up_signals_and_slots()
@@ -45,6 +46,12 @@ class MainController:
             lambda: self.zip_code_search_widget.next_button.setEnabled(
                 bool(self.zip_code_search_widget.zip_code_list.selectedItems())
             )
+        )
+        self.zip_code_search_widget.next_button.clicked.connect(
+            lambda: self.main_window.stacked_layout.setCurrentIndex(1)
+        )
+        self.select_weather_station_widget.go_back_button.clicked.connect(
+            lambda: self.main_window.stacked_layout.setCurrentIndex(0)
         )
 
     def submit_zip_code(self) -> None:

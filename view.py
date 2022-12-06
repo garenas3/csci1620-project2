@@ -10,6 +10,8 @@ class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.zip_code_search_widget = ZipCodeSearchWidget()
+        self.select_weather_station_widget = SelectWeatherStationWidget()
+        self.stacked_layout = QStackedLayout()
         self.status_bar = self.statusBar()
         self.on_close: Callable[..., Any] | None = None
         self.setWindowTitle('Frost Dates')
@@ -18,9 +20,9 @@ class MainWindow(QMainWindow):
     def setUpWidgets(self):
         """Set up the widgets in the main window."""
         central_widget = QWidget()
-        stacked_layout = QStackedLayout()
-        stacked_layout.addWidget(self.zip_code_search_widget)
-        central_widget.setLayout(stacked_layout)
+        self.stacked_layout.addWidget(self.zip_code_search_widget)
+        self.stacked_layout.addWidget(self.select_weather_station_widget)
+        central_widget.setLayout(self.stacked_layout)
         self.setCentralWidget(central_widget)
 
     def closeEvent(self, event: QCloseEvent) -> None:
@@ -59,6 +61,7 @@ class ZipCodeSearchWidget(QWidget):
         main_layout.addLayout(zip_search_layout)
         main_layout.addWidget(self.zip_code_list)
         buttons_layout = QHBoxLayout()
+        buttons_layout.addStretch(1)
         self.next_button.setEnabled(False)
         buttons_layout.addWidget(self.next_button)
         buttons_layout.addWidget(self.close_button)
@@ -70,3 +73,35 @@ class ZipCodeSearchWidget(QWidget):
         self.next_button.setStatusTip("Go to the next screen.")
         self.close_button.setStatusTip("Close the program.")
         self.search_button.setDefault(True)
+
+
+class SelectWeatherStationWidget(QWidget):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.station_list = QTreeWidget()
+        self.next_button = QPushButton("Next")
+        self.go_back_button = QPushButton("Go Back")
+        self.close_button = QPushButton("Close")
+        self.setWindowTitle('Select Weather Station')
+        self.setUpWidget()
+
+    def setUpWidget(self):
+        """Set up the select weather station widget."""
+        self.station_list.setColumnCount(2)
+        header = self.station_list.header()
+        header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.station_list.setHeaderHidden(True)
+        main_layout = QVBoxLayout()
+        main_layout.addWidget(self.station_list)
+        buttons_layout = QHBoxLayout()
+        self.next_button.setEnabled(False)
+        buttons_layout.addStretch(1)
+        buttons_layout.addWidget(self.go_back_button)
+        buttons_layout.addWidget(self.next_button)
+        buttons_layout.addWidget(self.close_button)
+        main_layout.addLayout(buttons_layout)
+        self.setLayout(main_layout)
+        self.station_list.setStatusTip("Select a weather station from the list.")
+        self.go_back_button.setStatusTip("Go to the previous screen.")
+        self.next_button.setStatusTip("Go to the next screen.")
+        self.close_button.setStatusTip("Close the program.")
