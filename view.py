@@ -77,7 +77,7 @@ class ZipCodeSearchPage(QWidget):
         self.zip_code_edit.setStatusTip("Enter 5-digit US ZIP code.")
         self.zip_code_list.setStatusTip("Location data returned for ZIP codes.")
         self.search_button.setStatusTip("Get location data from GeoNames.")
-        self.next_button.setStatusTip("Go to the next screen.")
+        self.next_button.setStatusTip("Go to the next page.")
         self.close_button.setStatusTip("Close the program.")
 
 
@@ -108,6 +108,7 @@ class SelectWeatherStationPage(QWidget):
         main_layout.addSpacing(10)
         self.search_radius.setMinimum(5)
         self.search_radius.setMaximum(20)
+        self.search_radius.setValue(10)
         main_layout.addWidget(self.search_radius)
         main_layout.addWidget(self.search_button, alignment=Qt.AlignmentFlag.AlignRight)
         main_layout.addWidget(self.station_list)
@@ -120,8 +121,8 @@ class SelectWeatherStationPage(QWidget):
         main_layout.addLayout(buttons_layout)
         self.setLayout(main_layout)
         self.station_list.setStatusTip("Select a weather station.")
-        self.go_back_button.setStatusTip("Go to the previous screen.")
-        self.next_button.setStatusTip("Go to the next screen.")
+        self.go_back_button.setStatusTip("Go to the previous page.")
+        self.next_button.setStatusTip("Go to the next page.")
         self.close_button.setStatusTip("Close the program.")
 
 
@@ -152,3 +153,6 @@ class SearchRadiusWidget(QWidget):
     def setMaximum(self, value):
         self.slider.setMaximum(value)
         self.spin_box.setMaximum(value)
+
+    def setValue(self, value):
+        self.spin_box.setValue(value)
