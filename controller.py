@@ -23,8 +23,8 @@ class MainController:
         self.main_window = MainWindow()
         self.zip_code_search_page = self.main_window.zip_code_search_widget
         self.select_weather_station_page = self.main_window.select_weather_station_widget
-        self.program_data = zip_data.load()
-        self.main_window.on_close = lambda: zip_data.save(self.program_data)
+        self.zip_data = zip_data.load()
+        self.main_window.on_close = lambda: zip_data.save(self.zip_data)
         self.set_up_signals_and_slots()
 
     def show(self) -> None:
@@ -94,7 +94,7 @@ class MainController:
             self.main_window.status_bar.showMessage(f"Duplicate request for {zipcode}.")
             return
         try:
-            zipcode_result = self.program_data[zipcode]
+            zipcode_result = self.zip_data[zipcode]
             self.add_zip_code_item(**zipcode_result)
             self.main_window.status_bar.showMessage(
                 "Data loaded from cache."
@@ -107,7 +107,7 @@ class MainController:
     def set_program_data(self, result):
         """Set the program data for the zipcode entry."""
         zipcode = result['zipcode']
-        self.program_data[zipcode] = result
+        self.zip_data[zipcode] = result
 
     def add_zip_code_item(self, *, zipcode, latitude, longitude, city):
         """Add a ZIP code item to the list."""
@@ -126,8 +126,8 @@ class MainController:
             selected = selected.parent()
         zip_code = selected.text(0)
         self.current_location = LocationCoordinates(
-            latitude=self.program_data[zip_code]["latitude"],
-            longitude=self.program_data[zip_code]["longitude"]
+            latitude=self.zip_data[zip_code]["latitude"],
+            longitude=self.zip_data[zip_code]["longitude"]
         )
 
     def search_weather_stations(self):
