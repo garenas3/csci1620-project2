@@ -64,7 +64,7 @@ class GetNearbyStationsAsyncController(QObject):
     its own signals to use instead of allowing access to the worker's
     signals.
     """
-    result_ready = pyqtSignal(dict)
+    result_ready = pyqtSignal(list)
     error_raised = pyqtSignal(str)
 
     def __init__(self, token: str) -> None:
@@ -112,7 +112,7 @@ class GetNearbyStationsAsyncController(QObject):
 
 class _GetNearbyStationsAsyncWorker(QObject):
     """Worker to perform asynchronous fetch of nearby stations."""
-    result_ready = pyqtSignal(dict)
+    result_ready = pyqtSignal(list)
     error_raised = pyqtSignal(str)
     finished = pyqtSignal()
 

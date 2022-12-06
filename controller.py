@@ -1,10 +1,12 @@
 import re
+from typing import Any
 
 from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox
 from PyQt5.QtCore import Qt
 
 from view import MainWindow, ZipCodeSearchPage
 import geonames_api
+import ncdc_api
 import zip_data
 from location_coordinates import LocationCoordinates
 
@@ -13,6 +15,9 @@ class MainController:
     def __init__(self) -> None:
         self.geonames_controller = geonames_api.GetZIPCodeAsyncController(
             geonames_api.load_username()
+        )
+        self.ncdc_controller = ncdc_api.GetNearbyStationsAsyncController(
+            ncdc_api.load_token()
         )
         self.current_location = LocationCoordinates(latitude="41.318581", longitude="-96.346288")
         self.main_window = MainWindow()
@@ -61,6 +66,7 @@ class MainController:
         self.select_weather_station_page.search_button.clicked.connect(
             self.search_weather_stations
         )
+        self.ncdc_controller.result_ready.connect(lambda result: self.add_weather_stations(result))
 
     def submit_zip_code(self) -> None:
         """Submit the ZIP code displayed in the ZIP code line edit."""
@@ -103,4 +109,17 @@ class MainController:
         zip_item.setExpanded(True)
 
     def search_weather_stations(self):
-        pass
+        radius = self.select_weather_station_page.search_radius.value()
+        self.ncdc_controller.sendRequest(self.current_location, radius, 'miles')
+
+    def add_weather_stations(self, stations: list[ncdc_api.StationInfo]):
+        """Add a list of weather stations."""
+        self.select_weather_station_page.station_list.clear()
+        for station in stations:
+            item = QTreeWidgetItem(None, [station.name])
+            item.setToolTip(0, station.name)
+            QTreeWidgetItem(item, ["Latitude:", str(station.location.latitude)])
+            QTreeWidgetItem(item, ["Longitude:", str(station.location.longitude)])
+            # QTreeWidgetItem(station, ["Distance:", str(distance)])
+            self.select_weather_station_page.station_list.addTopLevelItem(item)
+            item.setFirstColumnSpanned(True)
