@@ -66,7 +66,14 @@ class MainController:
         self.select_weather_station_page.search_button.clicked.connect(
             self.search_weather_stations
         )
-        self.ncdc_controller.result_ready.connect(lambda result: self.add_weather_stations(result))
+        self.ncdc_controller.result_ready.connect(
+            lambda result: self.add_weather_stations(result)
+        )
+        self.select_weather_station_page.station_list.itemSelectionChanged.connect(
+            lambda: self.select_weather_station_page.next_button.setEnabled(
+                bool(self.select_weather_station_page.station_list.selectedItems())
+            )
+        )
 
     def submit_zip_code(self) -> None:
         """Submit the ZIP code displayed in the ZIP code line edit."""
@@ -116,11 +123,14 @@ class MainController:
     def add_weather_stations(self, stations: list[ncdc_api.StationInfo]):
         """Add a list of weather stations."""
         self.select_weather_station_page.station_list.clear()
+        self.select_weather_station_page.next_button.setEnabled(False)
+        stations.sort(key=lambda s: self.current_location.distance_from(s.location, 'miles'))
         for station in stations:
             item = QTreeWidgetItem(None, [station.name])
             item.setToolTip(0, station.name)
             QTreeWidgetItem(item, ["Latitude:", str(station.location.latitude)])
             QTreeWidgetItem(item, ["Longitude:", str(station.location.longitude)])
-            # QTreeWidgetItem(station, ["Distance:", str(distance)])
+            distance = self.current_location.distance_from(station.location, 'miles')
+            QTreeWidgetItem(item, ["Distance:", f"{distance:.1f} miles"])
             self.select_weather_station_page.station_list.addTopLevelItem(item)
             item.setFirstColumnSpanned(True)
