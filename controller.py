@@ -14,8 +14,8 @@ class MainController:
             geonames_api.load_username()
         )
         self.main_window = MainWindow()
-        self.zip_code_search_widget = self.main_window.zip_code_search_widget
-        self.select_weather_station_widget = self.main_window.select_weather_station_widget
+        self.zip_code_search_page = self.main_window.zip_code_search_widget
+        self.select_weather_station_page = self.main_window.select_weather_station_widget
         self.program_data = zip_data.load()
         self.main_window.on_close = lambda: zip_data.save(self.program_data)
         self.set_up_signals_and_slots()
@@ -26,9 +26,9 @@ class MainController:
 
     def set_up_signals_and_slots(self) -> None:
         """Set up the signals and slots for the program."""
-        self.zip_code_search_widget.close_button.clicked.connect(self.main_window.close)
-        self.zip_code_search_widget.search_button.clicked.connect(self.submit_zip_code)
-        self.zip_code_search_widget.zip_code_edit.returnPressed.connect(
+        self.zip_code_search_page.close_button.clicked.connect(self.main_window.close)
+        self.zip_code_search_page.search_button.clicked.connect(self.submit_zip_code)
+        self.zip_code_search_page.zip_code_edit.returnPressed.connect(
             self.submit_zip_code
         )
         self.geonames_controller.result_ready.connect(
@@ -42,24 +42,24 @@ class MainController:
         )
         self.geonames_controller.result_ready.connect(lambda result: self.set_program_data(result))
         self.geonames_controller.result_ready.connect(lambda result: self.add_zip_code_item(**result))
-        self.zip_code_search_widget.zip_code_list.itemSelectionChanged.connect(
-            lambda: self.zip_code_search_widget.next_button.setEnabled(
-                bool(self.zip_code_search_widget.zip_code_list.selectedItems())
+        self.zip_code_search_page.zip_code_list.itemSelectionChanged.connect(
+            lambda: self.zip_code_search_page.next_button.setEnabled(
+                bool(self.zip_code_search_page.zip_code_list.selectedItems())
             )
         )
-        self.zip_code_search_widget.next_button.clicked.connect(
+        self.zip_code_search_page.next_button.clicked.connect(
             lambda: self.main_window.stacked_layout.setCurrentIndex(1)
         )
-        self.select_weather_station_widget.go_back_button.clicked.connect(
+        self.select_weather_station_page.go_back_button.clicked.connect(
             lambda: self.main_window.stacked_layout.setCurrentIndex(0)
         )
-        self.select_weather_station_widget.close_button.clicked.connect(
+        self.select_weather_station_page.close_button.clicked.connect(
             self.main_window.close
         )
 
     def submit_zip_code(self) -> None:
         """Submit the ZIP code displayed in the ZIP code line edit."""
-        zipcode = self.zip_code_search_widget.zip_code_edit.text()
+        zipcode = self.zip_code_search_page.zip_code_edit.text()
         zipcode = zipcode.strip()
         match = re.match(r"\d{5}", zipcode)
         if not match:
@@ -69,7 +69,7 @@ class MainController:
                 "A 5-digit ZIP code is required."
             )
             return
-        if self.zip_code_search_widget.zip_code_list.findItems(zipcode, Qt.MatchFlag.MatchExactly):
+        if self.zip_code_search_page.zip_code_list.findItems(zipcode, Qt.MatchFlag.MatchExactly):
             self.main_window.status_bar.showMessage(f"Duplicate request for {zipcode}.")
             return
         try:
@@ -94,5 +94,5 @@ class MainController:
         QTreeWidgetItem(zip_item, ["Latitude:", str(latitude)])
         QTreeWidgetItem(zip_item, ["Longitude:", str(longitude)])
         QTreeWidgetItem(zip_item, ["City:", city])
-        self.zip_code_search_widget.zip_code_list.addTopLevelItem(zip_item)
+        self.zip_code_search_page.zip_code_list.addTopLevelItem(zip_item)
         zip_item.setExpanded(True)
