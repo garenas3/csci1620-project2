@@ -106,6 +106,7 @@ class MainController:
         QTreeWidgetItem(zip_item, ["Longitude:", str(longitude)])
         QTreeWidgetItem(zip_item, ["City:", city])
         self.zip_code_search_page.zip_code_list.addTopLevelItem(zip_item)
+        zip_item.setFirstColumnSpanned(True)
         zip_item.setExpanded(True)
 
     def search_weather_stations(self):
