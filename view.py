@@ -3,7 +3,7 @@ from typing import Callable, Any
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import (QWidget, QLineEdit, QHBoxLayout, QVBoxLayout,
                              QPushButton, QTreeWidget, QHeaderView,
-                             QMainWindow, QLabel, QSizePolicy)
+                             QMainWindow, QLabel, QSizePolicy, QStackedLayout)
 
 
 class MainWindow(QMainWindow):
@@ -21,8 +21,21 @@ class MainWindow(QMainWindow):
 
     def setUpWidgets(self):
         """Set up the widgets in the main window."""
-        zip_code_search_widget = self.setUpZipCodeSearchWidget()
-        self.setCentralWidget(zip_code_search_widget)
+        central_widget = QWidget()
+        buttons_layout = QHBoxLayout()
+        self.next_button.setEnabled(False)
+        buttons_layout.addWidget(self.next_button)
+        buttons_layout.addWidget(self.close_button)
+        stacked_layout = QStackedLayout()
+        stacked_layout.addWidget(self.setUpZipCodeSearchWidget())
+        stacked_layout.addWidget(self.setUpSelectStationWidget())
+        self.next_button.clicked.connect(lambda: stacked_layout.setCurrentIndex(1))
+        self.next_button.clicked.connect(lambda: self.next_button.setEnabled(False))
+        main_layout = QVBoxLayout()
+        main_layout.addLayout(stacked_layout)
+        main_layout.addLayout(buttons_layout)
+        central_widget.setLayout(main_layout)
+        self.setCentralWidget(central_widget)
 
     def setUpZipCodeSearchWidget(self) -> QWidget:
         """Set up the ZIP code search widget."""
@@ -40,14 +53,9 @@ class MainWindow(QMainWindow):
         header = self.zip_code_list.header()
         header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.zip_code_list.setHeaderHidden(True)
-        buttons_layout = QHBoxLayout()
-        self.next_button.setEnabled(False)
-        buttons_layout.addWidget(self.next_button)
-        buttons_layout.addWidget(self.close_button)
         main_layout = QVBoxLayout()
         main_layout.addLayout(zip_search_layout)
         main_layout.addWidget(self.zip_code_list)
-        main_layout.addLayout(buttons_layout)
         zip_code_search_widget.setLayout(main_layout)
         self.zip_code_edit.setStatusTip("Enter 5-digit US ZIP code.")
         self.zip_code_list.setStatusTip("Location data returned for ZIP codes.")
@@ -56,6 +64,11 @@ class MainWindow(QMainWindow):
         self.close_button.setStatusTip("Close the program.")
         self.search_button.setDefault(True)
         return zip_code_search_widget
+
+    def setUpSelectStationWidget(self) -> QWidget:
+        """Set up the select station widget."""
+        select_station_widget = QWidget()
+        return select_station_widget
 
     def closeEvent(self, event: QCloseEvent) -> None:
         if self.on_close:
