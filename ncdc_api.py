@@ -4,6 +4,7 @@ import datetime
 
 import requests
 from PyQt5.QtCore import QThread, QObject, pyqtSignal
+
 from location_coordinates import LocationCoordinates
 
 
