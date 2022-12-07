@@ -1,5 +1,6 @@
 from typing import Literal
 from dataclasses import dataclass
+import datetime
 
 import requests
 from PyQt5.QtCore import QThread, QObject, pyqtSignal
@@ -22,6 +23,7 @@ def get_nearby_stations(token: str, location: LocationCoordinates,
     """
     payload = {
         'extent': location.googleapi_latlngbounds_urlvalue(radius, unit),
+        'datatypeid': 'ANN-TMIN-PRBFST-T16FP10',
         'datasetid': 'NORMAL_ANN'  # Normals Annual/Seasonal
     }
     r = requests.get('https://www.ncei.noaa.gov/cdo-web/api/v2/stations',
@@ -36,11 +38,13 @@ def get_nearby_stations(token: str, location: LocationCoordinates,
             ) for station in response['results']
         ]
         return stations
+    except KeyError:
+        raise RuntimeError('No results')
     except requests.exceptions.JSONDecodeError:
         raise RuntimeError('Unable to parse JSON')
 
 
-def get_frost_dates(token: str, station_id: str):
+def get_frost_dates(token: str, station_id: str, kind: Literal['first', 'last']):
     """Retrieve a list of nearby stations.
 
     https://www.ncdc.noaa.gov/cdo-web/webservices/v2
@@ -54,15 +58,53 @@ def get_frost_dates(token: str, station_id: str):
     payload = {
         'datasetid': 'NORMAL_ANN',  # Normals Annual/Seasonal
         'startdate': '2010-01-01',
-        'enddate': '2010-01-01'
+        'enddate': '2010-01-01',
+        'stationid': station_id,
+        'datatypeid': list(FrostDateDataTypesIterable(kind)),
+        'limit': 100
     }
     r = requests.get('https://www.ncei.noaa.gov/cdo-web/api/v2/data',
                      params=payload, headers={'token': token})
     try:
         response = r.json()
-        return response
+        return {
+            data['datatype']: to_short_date(data['value'])
+            for data in response['results']
+        }
     except requests.exceptions.JSONDecodeError:
         raise RuntimeError('Unable to parse JSON')
+
+
+def to_short_date(day_of_year):
+    d = datetime.datetime(2010, 1, 1) + datetime.timedelta(int(day_of_year) - 1)
+    return d.strftime('%b %d')
+
+
+class FrostDateDataTypesIterable:
+    def __init__(self, kind: Literal['first', 'last'], limit: int = 0):
+        if kind == 'first':
+            self.base = 'ANN-TMIN-PRBFST-'
+        elif kind == 'last':
+            self.base = 'ANN-TMIN-PRBLST-'
+        self.temperature = 12
+        self.percent_probability = 90
+        self.count = 0
+        self.limit = limit
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.limit and self.count == self.limit:
+            raise StopIteration
+        self.count += 1
+        self.percent_probability += 10
+        if self.percent_probability == 100:
+            self.percent_probability = 10
+            self.temperature += 4
+        if self.temperature == 40:
+            raise StopIteration
+        return self.base + f'T{self.temperature}FP{self.percent_probability}'
 
 
 @dataclass
@@ -162,11 +204,9 @@ class _GetNearbyStationsAsyncWorker(QObject):
 
 def main():
     token = load_token()
-    get_frost_dates(token, "GHCND:USC00258795")
-    location = LocationCoordinates(latitude="41.318581", longitude="-96.346288")
-    stations = get_nearby_stations(token, location, 15, "miles")
-    for station in stations:
-        print(station)
+    oma_id = 'GHCND:USW00014942'
+    result = get_frost_dates(token, oma_id)
+    print(result)
 
 
 if __name__ == "__main__":

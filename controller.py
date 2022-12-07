@@ -1,7 +1,7 @@
 import re
 from typing import Any
 
-from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox, QWidget
+from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox, QWidget, QTableWidgetItem
 from PyQt5.QtCore import Qt
 
 from view import MainWindow, ZipCodeSearchPage
@@ -100,6 +100,9 @@ class MainController:
         self.frost_dates_page.close_button.clicked.connect(
             self.main_window.close
         )
+        self.select_weather_station_page.next_button.clicked.connect(
+            self.add_frost_dates
+        )
 
     def submit_zip_code(self) -> None:
         """Submit the ZIP code displayed in the ZIP code line edit."""
@@ -183,3 +186,21 @@ class MainController:
             selected = selected.parent()
         station_id = selected.child(0).text(1)
         self.current_station_id = station_id
+
+    def add_frost_dates(self):
+        """Add frost dates to the frost dates page."""
+        frost_dates = ncdc_api.get_frost_dates(self.ncdc_controller.token, self.current_station_id, 'first')
+        frost_date_keys = ncdc_api.FrostDateDataTypesIterable('first')
+        for key in frost_date_keys:
+            row = (frost_date_keys.temperature - 16) // 4
+            column = frost_date_keys.percent_probability // 10
+            item = QTableWidgetItem(frost_dates[key])
+            self.frost_dates_page.fall_frost_dates_table.setItem(row, column, item)
+
+        frost_dates = ncdc_api.get_frost_dates(self.ncdc_controller.token, self.current_station_id, 'last')
+        frost_date_keys = ncdc_api.FrostDateDataTypesIterable('last')
+        for key in frost_date_keys:
+            row = (frost_date_keys.temperature - 16) // 4
+            column = frost_date_keys.percent_probability // 10
+            item = QTableWidgetItem(frost_dates[key])
+            self.frost_dates_page.spring_frost_dates_table.setItem(row, column, item)
