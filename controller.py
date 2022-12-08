@@ -32,6 +32,7 @@ class MainController:
     def show(self) -> None:
         """Show the main window to the user."""
         self.main_window.show()
+        self.main_window.setFixedSize(self.main_window.size())
 
     def set_up_signals_and_slots(self) -> None:
         """Set up the signals and slots for the program."""
