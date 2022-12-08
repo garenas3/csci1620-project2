@@ -23,3 +23,19 @@ Visit the [GeoNames web services documentation](https://www.geonames.org/export/
 
 For this application, store the GeoNames username in a file named geonames.txt
 in the same directory as this README.
+
+## NCDC API
+
+Website: [https://www.ncdc.noaa.gov/cdo-web/webservices](https://www.ncdc.noaa.gov/cdo-web/webservices)
+
+The National Climatic Data Center offers web services for developers who wish to
+work with both current and historical weather data.
+
+### How to use NCDC API
+
+1. Register your email to receive your unique API key for the application using
+   the [token request page](https://www.ncdc.noaa.gov/cdo-web/token).
+2. Supply the API key sent to your email in the header when making all requests.
+
+For this application, store the NCDC API key ina file named ncdc.txt in the same
+directory as this README.
