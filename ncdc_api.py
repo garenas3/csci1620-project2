@@ -223,14 +223,3 @@ class _GetNearbyStationsAsyncWorker(QObject):
             self.error_raised.emit(str(error))
         finally:
             self.finished.emit()
-
-
-def main():
-    token = load_token()
-    oma_id = 'GHCND:USW00014942'
-    result = get_frost_dates(token, oma_id)
-    print(result)
-
-
-if __name__ == "__main__":
-    main()
