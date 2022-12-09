@@ -130,7 +130,7 @@ class MainController:
         """Submit the ZIP code displayed in the ZIP code line edit."""
         zipcode = self.zip_code_search_page.zip_code_edit.text()
         zipcode = zipcode.strip()
-        match = re.match(r"\d{5}", zipcode)
+        match = re.match(r"\d{5, 5}", zipcode)
         if not match:
             QMessageBox.warning(
                 self.main_window,
