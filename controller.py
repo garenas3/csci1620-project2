@@ -37,9 +37,15 @@ class MainController:
     def set_up_signals_and_slots(self) -> None:
         """Set up the signals and slots for the program."""
         self.zip_code_search_page.close_button.clicked.connect(self.main_window.close)
+        self.zip_code_search_page.search_button.clicked.connect(
+            lambda: self.zip_code_search_page.search_button.setEnabled(False)
+        )
         self.zip_code_search_page.search_button.clicked.connect(self.submit_zip_code)
         self.zip_code_search_page.zip_code_edit.returnPressed.connect(
             self.submit_zip_code
+        )
+        self.zip_code_search_page.zip_code_edit.returnPressed.connect(
+            lambda: self.zip_code_search_page.search_button.setEnabled(False)
         )
         self.geonames_controller.result_ready.connect(
             lambda: self.main_window.status_bar.showMessage("Request successful.")
@@ -49,6 +55,9 @@ class MainController:
         )
         self.geonames_controller.error_raised.connect(
             lambda message: QMessageBox.warning(self.main_window, "Error", message)
+        )
+        self.geonames_controller.finished.connect(
+            lambda: self.zip_code_search_page.search_button.setEnabled(True)
         )
         self.geonames_controller.result_ready.connect(lambda result: self.set_program_data(result))
         self.geonames_controller.result_ready.connect(lambda result: self.add_zip_code_item(**result))
@@ -116,9 +125,11 @@ class MainController:
                 "ZIP code is required",
                 "A 5-digit ZIP code is required."
             )
+            self.zip_code_search_page.search_button.setEnabled(True)
             return
         if self.zip_code_search_page.zip_code_list.findItems(zipcode, Qt.MatchFlag.MatchExactly):
             self.main_window.status_bar.showMessage(f"Duplicate request for {zipcode}.")
+            self.zip_code_search_page.search_button.setEnabled(True)
             return
         try:
             zipcode_result = self.zip_data[zipcode]
@@ -126,6 +137,7 @@ class MainController:
             self.main_window.status_bar.showMessage(
                 "Data loaded from cache."
             )
+            self.zip_code_search_page.search_button.setEnabled(True)
             return
         except KeyError:
             self.main_window.status_bar.showMessage("Requesting ZIP code data ...")
