@@ -24,6 +24,14 @@ Visit the [GeoNames web services documentation](https://www.geonames.org/export/
 For this application, store the GeoNames username in a file named geonames.txt
 in the same directory as this README.
 
+```python
+# geonames_api.py
+def load_username() -> str:
+    """Load the GeoNames username from the file geonames.txt."""
+    with open("geonames.txt", "r") as fh:
+        return fh.read().strip()
+```
+
 ## NCDC API
 
 Website: [https://www.ncdc.noaa.gov/cdo-web/webservices](https://www.ncdc.noaa.gov/cdo-web/webservices)
@@ -39,3 +47,11 @@ work with both current and historical weather data.
 
 For this application, store the NCDC API key in a file named ncdc.txt in the same
 directory as this README.
+
+```python
+# ncdc_api.py
+def load_token() -> str:
+    """Load the NCDC service token from the file ncdc.txt."""
+    with open("ncdc.txt", "r") as fh:
+        return fh.read().strip()
+```
