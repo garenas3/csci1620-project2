@@ -77,7 +77,14 @@ def get_frost_dates(token: str, station_id: str, kind: Literal['first', 'last'])
         raise RuntimeError('Unable to parse JSON')
 
 
-def to_short_date(day_of_year):
+def to_short_date(day_of_year) -> str:
+    """Get the short date form for a given day of year.
+
+    Args:
+        day_of_year: A day of the year. E.g. 32 is Feb. 1st.
+    Returns:
+        The day of the year as short date string.
+    """
     d = datetime.datetime(2010, 1, 1) + datetime.timedelta(int(day_of_year) - 1)
     return d.strftime('%b %d')
 
