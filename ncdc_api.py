@@ -20,7 +20,7 @@ def get_nearby_stations(token: str, location: LocationCoordinates,
         radius: The distance to search from the center of the search location.
         unit: The unit to use for the search radius. Either miles or km.
     Returns:
-        A list of stations near the given search coordinates sorted from nearest to farthest.
+        A list of stations near the given search coordinates.
     """
     payload = {
         'extent': location.googleapi_latlngbounds_urlvalue(radius, unit),
@@ -53,6 +53,7 @@ def get_frost_dates(token: str, station_id: str, kind: Literal['first', 'last'])
     Args:
         token: The NCDC web service token used to retrieve the data.
         station_id: The station ID to fetch from.
+        kind: The kind of frost dates to fetch. Either first or last.
     Returns:
         A list of stations near the given search coordinates sorted from nearest to farthest.
     """
