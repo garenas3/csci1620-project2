@@ -63,6 +63,7 @@ class GetZIPCodeAsyncController(QObject):
     """
     result_ready = pyqtSignal(dict)
     error_raised = pyqtSignal(str)
+    finished = pyqtSignal()
 
     def __init__(self, username: str) -> None:
         """Initialize the AsyncController.
@@ -102,6 +103,7 @@ class GetZIPCodeAsyncController(QObject):
 
         self._worker.result_ready.connect(self.result_ready)
         self._worker.error_raised.connect(self.error_raised)
+        self._worker.finished.connect(self.finished)
 
         self._worker_thread.start()
 
