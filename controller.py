@@ -1,4 +1,5 @@
 import re
+from typing import Any
 
 from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox, QTableWidgetItem
 from PyQt5.QtCore import Qt
@@ -58,7 +59,7 @@ class MainController:
         self.geonames_controller.finished.connect(
             lambda: self.zip_code_search_page.search_button.setEnabled(True)
         )
-        self.geonames_controller.result_ready.connect(lambda result: self.set_program_data(result))
+        self.geonames_controller.result_ready.connect(lambda result: self.set_zip_data(result))
         self.geonames_controller.result_ready.connect(lambda result: self.add_zip_code_item(**result))
         self.zip_code_search_page.zip_code_list.itemSelectionChanged.connect(
             lambda: self.zip_code_search_page.next_button.setEnabled(
@@ -138,7 +139,9 @@ class MainController:
             )
             self.zip_code_search_page.search_button.setEnabled(True)
             return
-        if self.zip_code_search_page.zip_code_list.findItems(zipcode, Qt.MatchFlag.MatchExactly):
+        if self.zip_code_search_page.zip_code_list.findItems(
+                zipcode, Qt.MatchFlag.MatchExactly
+                ):
             self.main_window.status_bar.showMessage(f"Duplicate request for {zipcode}.")
             self.zip_code_search_page.search_button.setEnabled(True)
             return
@@ -154,14 +157,15 @@ class MainController:
             self.main_window.status_bar.showMessage("Requesting ZIP code data ...")
             self.geonames_controller.sendRequest(zipcode)
 
-    def set_program_data(self, result):
-        """Set the program data for the zipcode entry."""
-        zipcode = result['zipcode']
-        self.zip_data[zipcode] = result
+    def set_zip_data(self, zip_entry: dict[str, Any]) -> None:
+        """Set the program data for the ZIP entry."""
+        zipcode = zip_entry['zipcode']
+        self.zip_data[zipcode] = zip_entry
 
-    def add_zip_code_item(self, *, zipcode, latitude, longitude, city):
+    def add_zip_code_item(self, *, zipcode: str, latitude: Any, longitude: Any,
+                          city: str) -> None:
         """Add a ZIP code item to the list."""
-        zip_item = QTreeWidgetItem(None, [str(zipcode)])
+        zip_item = QTreeWidgetItem(None, [zipcode])
         QTreeWidgetItem(zip_item, ["Latitude:", str(latitude)])
         QTreeWidgetItem(zip_item, ["Longitude:", str(longitude)])
         QTreeWidgetItem(zip_item, ["City:", city])
@@ -169,7 +173,7 @@ class MainController:
         zip_item.setFirstColumnSpanned(True)
         zip_item.setExpanded(True)
 
-    def set_current_location(self):
+    def set_current_location(self) -> None:
         """Set the current location to the selected ZIP code."""
         selected = self.zip_code_search_page.zip_code_list.selectedItems()[0]
         if isinstance(selected.parent(), QTreeWidgetItem):
@@ -180,12 +184,17 @@ class MainController:
             longitude=self.zip_data[zip_code]["longitude"]
         )
 
-    def search_weather_stations(self):
+    def search_weather_stations(self) -> None:
+        """Search for weather stations near the current location."""
         radius = self.select_weather_station_page.search_radius.value()
         self.ncdc_controller.sendRequest(self.current_location, radius, 'miles')
 
-    def add_weather_stations(self, stations: list[ncdc_api.StationInfo]):
-        """Add a list of weather stations."""
+    def add_weather_stations(self, stations: list[ncdc_api.StationInfo]) -> None:
+        """Add a list of weather stations.
+
+        Args:
+            stations: A list of stations to add to the list.
+        """
         self.select_weather_station_page.station_list.clear()
         self.select_weather_station_page.next_button.setEnabled(False)
         stations.sort(key=lambda s: self.current_location.distance_from(s.location, 'miles'))
@@ -199,7 +208,7 @@ class MainController:
             self.select_weather_station_page.station_list.addTopLevelItem(item)
             item.setFirstColumnSpanned(True)
 
-    def set_current_station_id(self):
+    def set_current_station_id(self) -> None:
         """Set the current station ID to the selected station."""
         items = self.select_weather_station_page.station_list.selectedItems()
         if not items:
@@ -211,7 +220,7 @@ class MainController:
         station_id = selected.child(0).text(1)
         self.current_station_id = station_id
 
-    def add_frost_dates(self):
+    def add_frost_dates(self) -> None:
         """Add frost dates to the frost dates page."""
         frost_dates = ncdc_api.get_frost_dates(self.ncdc_controller.token, self.current_station_id, 'first')
         frost_date_keys = ncdc_api.FrostDateDataTypesIterable('first')
