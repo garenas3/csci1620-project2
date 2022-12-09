@@ -1,10 +1,9 @@
 import re
-from typing import Any
 
-from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox, QWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox, QTableWidgetItem
 from PyQt5.QtCore import Qt
 
-from view import MainWindow, ZipCodeSearchPage
+from view import MainWindow
 import geonames_api
 import ncdc_api
 import zip_data
