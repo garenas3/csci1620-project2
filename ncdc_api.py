@@ -82,7 +82,19 @@ def to_short_date(day_of_year):
 
 
 class FrostDateDataTypesIterable:
-    def __init__(self, kind: Literal['first', 'last'], limit: int = 0):
+    """Generate frost date data types to fetch from API."""
+    def __init__(self, kind: Literal['first', 'last'], limit: int = 0) -> None:
+        """Create a frost dates iterable.
+
+        Iterates through a set of valid frost date data types. Each of
+        the nine probability values are generated for the current
+        temperature value before moving on to the next temperature set.
+
+        Args:
+            kind: The kind of frost date data types to generate. Either
+                  first or last.
+            limit: The number of items to generate.
+        """
         if kind == 'first':
             self.base = 'ANN-TMIN-PRBFST-'
         elif kind == 'last':
