@@ -79,6 +79,9 @@ class MainController:
             lambda: self.select_weather_station_page.search_button.setEnabled(False)
         )
         self.select_weather_station_page.search_button.clicked.connect(
+            self.select_weather_station_page.station_list.clear
+        )
+        self.select_weather_station_page.search_button.clicked.connect(
             self.search_weather_stations
         )
         self.ncdc_controller.result_ready.connect(
