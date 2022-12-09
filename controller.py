@@ -42,10 +42,10 @@ class MainController:
         )
         self.zip_code_search_page.search_button.clicked.connect(self.submit_zip_code)
         self.zip_code_search_page.zip_code_edit.returnPressed.connect(
-            self.submit_zip_code
+            lambda: self.zip_code_search_page.search_button.setEnabled(False)
         )
         self.zip_code_search_page.zip_code_edit.returnPressed.connect(
-            lambda: self.zip_code_search_page.search_button.setEnabled(False)
+            self.submit_zip_code
         )
         self.geonames_controller.result_ready.connect(
             lambda: self.main_window.status_bar.showMessage("Request successful.")
