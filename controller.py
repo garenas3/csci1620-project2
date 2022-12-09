@@ -76,10 +76,16 @@ class MainController:
             self.main_window.close
         )
         self.select_weather_station_page.search_button.clicked.connect(
+            lambda: self.select_weather_station_page.search_button.setEnabled(False)
+        )
+        self.select_weather_station_page.search_button.clicked.connect(
             self.search_weather_stations
         )
         self.ncdc_controller.result_ready.connect(
             lambda result: self.add_weather_stations(result)
+        )
+        self.ncdc_controller.finished.connect(
+            lambda: self.select_weather_station_page.search_button.setEnabled(True)
         )
         self.select_weather_station_page.station_list.itemSelectionChanged.connect(
             lambda: self.select_weather_station_page.next_button.setEnabled(
@@ -109,6 +115,9 @@ class MainController:
         )
         self.frost_dates_page.close_button.clicked.connect(
             self.main_window.close
+        )
+        self.select_weather_station_page.next_button.clicked.connect(
+            lambda: self.select_weather_station_page.next_button.setEnabled(False)
         )
         self.select_weather_station_page.next_button.clicked.connect(
             self.add_frost_dates
