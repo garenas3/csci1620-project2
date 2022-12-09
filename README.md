@@ -37,5 +37,5 @@ work with both current and historical weather data.
    the [token request page](https://www.ncdc.noaa.gov/cdo-web/token).
 2. Supply the API key sent to your email in the header when making all requests.
 
-For this application, store the NCDC API key ina file named ncdc.txt in the same
+For this application, store the NCDC API key in a file named ncdc.txt in the same
 directory as this README.
